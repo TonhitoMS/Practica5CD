@@ -51,7 +51,7 @@ public class Servidor  {
             Naming.rebind(registryURL, exportedObj);
             
             System.out.println(registryURL);
-            System.out.println("Callback Server ready.");
+            System.out.println("Server ready.");
         }
         catch (Exception re) {
             re.printStackTrace();
