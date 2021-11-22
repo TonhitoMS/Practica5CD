@@ -6,12 +6,15 @@
 
 package aplicacion;
 
+import java.rmi.server.UnicastRemoteObject;
+
 /**
  * 
  * @author Sammy Guergachi <sguergachi at gmail.com>
  */
-public class ServerImpl implements IServidor{
+public class ServerImpl extends UnicastRemoteObject implements IServidor{
 
+    @Override
     public String sayHello( ) throws java.rmi.RemoteException {
         return("hello");
     }
