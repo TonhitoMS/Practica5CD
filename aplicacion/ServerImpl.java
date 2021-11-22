@@ -6,7 +6,9 @@
 
 package aplicacion;
 
+import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 /**
  * 
@@ -14,6 +16,14 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class ServerImpl extends UnicastRemoteObject implements IServidor{
 
+    
+    private ArrayList<Cliente> clientList;
+
+    public ServerImpl() throws RemoteException {
+        super( );
+        clientList = new ArrayList<>();
+    }
+    
     @Override
     public String sayHello( ) throws java.rmi.RemoteException {
         return("hello");
