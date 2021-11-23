@@ -7,16 +7,33 @@
 package aplicacion;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 /**
  * 
  * @author Sammy Guergachi <sguergachi at gmail.com>
  */
 public class ClienteImpl implements ICliente{
-
+    
+    private ArrayList<ICliente> usuarios;
+    private Cliente c;
+    
+    
+    public ClienteImpl(Cliente c) throws RemoteException {
+        super( );
+        this.c = c;
+    }
+    
     @Override
     public void message(String s) throws RemoteException {
         System.out.println(s + "\n");
     }
+    
+    @Override
+    public void notifyMe(ArrayList<ICliente> usuarios){
+        
+        this.usuarios = usuarios;
+        c.setUsuarios(usuarios);  // Pasamos la lista al cliente
+    } 
 
 }

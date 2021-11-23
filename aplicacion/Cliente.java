@@ -9,11 +9,14 @@ package aplicacion;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.rmi.*;
+import java.util.ArrayList;
 
 
 
 public class Cliente {
     
+    private ArrayList<ICliente> usuarios;
+    private ICliente callbackObj;
     
     public static void main(String args[]) {
         try {
@@ -46,4 +49,10 @@ public class Cliente {
             "Exception in CallbackClient: " + e);
         } 
     }
+
+    public void setUsuarios(ArrayList<ICliente> usuarios) {
+        this.usuarios = usuarios;
+    }
+    
+    
 }
