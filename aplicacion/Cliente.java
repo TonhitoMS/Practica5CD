@@ -43,6 +43,11 @@ public class Cliente {
             "Introduce o nome do usuario:");
           PeerId = br.readLine();
           
+          ICliente IC = null;
+          h.registerForCallback(IC);//cambiar método para que pida un obxecto Peer e devolva amigos conectados
+          
+          
+          
           } // end try 
         catch (Exception e) {
           System.out.println(
