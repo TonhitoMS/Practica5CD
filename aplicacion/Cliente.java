@@ -42,10 +42,11 @@ public class Cliente {
           System.out.println(
             "Introduce o nome do usuario:");
           PeerId = br.readLine();
-          
+          //Código para rexistrar o peer no servidor nas probas iniciais
           ICliente IC = null;
           h.registerForCallback(IC);//cambiar método para que pida un obxecto Peer e devolva amigos conectados
-          
+          //crear método que actualice os amigos conectados cada vez que se conecta un.
+          //cambiar atributo da ServerImpl para que sexa un ArrayList de obxecto Peer(id e referencia)
           
           
           } // end try 
