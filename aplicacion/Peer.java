@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package aplicacion;
+import java.util.Objects;
 
 /**
  *
@@ -27,9 +28,6 @@ public class Peer {
     
     
 
-    public Peer(String nombre, String ip, int puerto) {
-        this.nombre = nombre;
-    }
 
     public String getNombre() {
         return nombre;
@@ -37,6 +35,26 @@ public class Peer {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+ 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Peer other = (Peer) obj;
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return true;
     }
   
     

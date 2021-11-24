@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class ServerImpl extends UnicastRemoteObject implements IServidor{
 
     
-    private ArrayList<ICliente> clientList;
+    private ArrayList<Peer> clientList;
 
     public ServerImpl() throws RemoteException {
         super( );
@@ -31,12 +31,13 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     
     @Override
     public synchronized void registerForCallback(
+    String nome,
     ICliente callbackClientObject)
     throws java.rmi.RemoteException{
-        
+        Peer p = new Peer(nome, callbackClientObject);
         // store the callback object into the vector        
-        if (!(clientList.contains(callbackClientObject))) {
-            clientList.add(callbackClientObject);
+        if (!(clientList.contains(p))) {
+            clientList.add(p);
             
             System.out.println("Registered new client ");
             
@@ -46,10 +47,12 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
 
     @Override
     public synchronized void unregisterForCallback(
+    String nome,
     ICliente callbackClientObject) 
     throws java.rmi.RemoteException{
-                
-        if (clientList.remove(callbackClientObject)) {
+        Peer p = new Peer(nome, callbackClientObject);
+
+        if (clientList.remove(p)) {
             
             System.out.println("Unregistered client ");
             
@@ -70,10 +73,10 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
         for (int i = 0; i < clientList.size(); i++){
             System.out.println("doing "+ i +"-th callback\n");    
             // convert the vector object to a callback object
-            ICliente nextClient = (ICliente)clientList.get(i);
+            Peer nextClient = (Peer)clientList.get(i);
             
             // mandamos la lista de usuarios conectados al cliente
-            nextClient.notifyMe(clientList);
+            nextClient.getCl().notifyMe(clientList);
             
         }// end for
         System.out.println("********************************\n" +

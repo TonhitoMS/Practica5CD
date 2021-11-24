@@ -5,6 +5,7 @@
  */
 
 package aplicacion;
+import java.rmi.*;
 
 import java.util.ArrayList;
 
@@ -12,18 +13,20 @@ import java.util.ArrayList;
  * 
  * @author Sammy Guergachi <sguergachi at gmail.com>
  */
-public interface IServidor {
+public interface IServidor extends Remote{
 
     public String sayHello( )   
         throws java.rmi.RemoteException;
    
     
     public void registerForCallback(
+    String nome,
     ICliente callbackClientObject
     ) throws java.rmi.RemoteException;
 
 
     public void unregisterForCallback(
+    String nome,
     ICliente callbackClientObject)
     throws java.rmi.RemoteException;
 }

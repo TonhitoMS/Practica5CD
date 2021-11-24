@@ -1,4 +1,4 @@
-
+    
 
 package aplicacion;
 
@@ -17,7 +17,9 @@ public interface ICliente extends Remote{
     public void message(String s) throws RemoteException;
     
     // Metodo para mandar a un cliente las referencias al resto de clientes conectados
-    public void notifyMe(ArrayList<ICliente> usuarios) 
+    public void notifyMe(ArrayList<Peer> usuarios) 
             throws java.rmi.RemoteException;
     
+    public Peer getPeer(String nome) throws java.rmi.RemoteException;
+
 }

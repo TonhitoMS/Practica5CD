@@ -8,20 +8,21 @@ package aplicacion;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * 
  * @author Sammy Guergachi <sguergachi at gmail.com>
  */
-public class ClienteImpl implements ICliente{
+public class ClienteImpl extends UnicastRemoteObject implements ICliente {
     
-    private ArrayList<ICliente> usuarios;
-    private Cliente c;
+    private ArrayList<Peer> usuarios;
+    //private Cliente c;
     
     
-    public ClienteImpl(Cliente c) throws RemoteException {
+    public ClienteImpl(/*Cliente c*/) throws RemoteException {
         super( );
-        this.c = c;
+        //this.c = c;
     }
     
     @Override
@@ -30,10 +31,21 @@ public class ClienteImpl implements ICliente{
     }
     
     @Override
-    public void notifyMe(ArrayList<ICliente> usuarios){
+    public void notifyMe(ArrayList<Peer> usuarios){
         
         this.usuarios = usuarios;
-        c.setUsuarios(usuarios);  // Pasamos la lista al cliente
+        //c.setUsuarios(usuarios);  // Pasamos la lista al cliente
     } 
+    
+    public Peer getPeer(String nome){
+        Peer result = null;
+        
+        for(Peer p: this.usuarios){
+            if(p.getNombre().equals(nome))
+                return p;
+        }
+        
+        return result;
+    }
 
 }

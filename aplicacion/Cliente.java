@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class Cliente {
     
-    private ArrayList<ICliente> usuarios;
-    private ICliente callbackObj;
+    //private ArrayList<ICliente> usuarios;
+    //private ICliente callbackObj;
     
     public static void main(String args[]) {
         try {
@@ -43,11 +43,17 @@ public class Cliente {
             "Introduce o nome do usuario:");
           PeerId = br.readLine();
           //Código para rexistrar o peer no servidor nas probas iniciais
-          ICliente IC = null;
-          h.registerForCallback(IC);//cambiar método para que pida un obxecto Peer e devolva amigos conectados
+          ICliente IC = new ClienteImpl();
+          Peer peer = new Peer(PeerId, IC);
+          System.out.println(h.sayHello());
+//          System.out.println(peer.getCl());
+          h.registerForCallback( PeerId, IC);//cambiar método para que pida un obxecto Peer e devolva amigos conectados
           //crear método que actualice os amigos conectados cada vez que se conecta un.
           //cambiar atributo da ServerImpl para que sexa un ArrayList de obxecto Peer(id e referencia)
           
+//          Peer amigo = peer.getCl().getPeer("pepe");
+//          amigo.getCl().message("Ola");
+            while(true);
           
           } // end try 
         catch (Exception e) {
@@ -55,10 +61,10 @@ public class Cliente {
             "Exception in CallbackClient: " + e);
         } 
     }
-
-    public void setUsuarios(ArrayList<ICliente> usuarios) {
-        this.usuarios = usuarios;
-    }
+//
+//    public void setUsuarios(ArrayList<ICliente> usuarios) {
+//        this.usuarios = usuarios;
+//    }
     
     
 }
