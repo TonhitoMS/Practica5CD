@@ -3,13 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package aplicacion;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author antonio
  */
-public class Peer {
+public class Peer implements Serializable{
     private String nombre;
     private ICliente cl;
 

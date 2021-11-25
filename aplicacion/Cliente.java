@@ -51,8 +51,8 @@ public class Cliente {
           //crear método que actualice os amigos conectados cada vez que se conecta un.
           //cambiar atributo da ServerImpl para que sexa un ArrayList de obxecto Peer(id e referencia)
           
-//          Peer amigo = peer.getCl().getPeer("pepe");
-//          amigo.getCl().message("Ola");
+          Peer amigo = peer.getCl().getPeer("pepe");
+          amigo.getCl().message("Ola");
             while(true);
           
           } // end try 
