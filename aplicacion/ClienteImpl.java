@@ -17,7 +17,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class ClienteImpl extends UnicastRemoteObject implements ICliente {
     
     private ArrayList<Peer> usuarios;
-    //private Cliente c;
+    private Cliente c;
     
     
     public ClienteImpl(/*Cliente c*/) throws RemoteException {
@@ -34,7 +34,7 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
     public void notifyMe(ArrayList<Peer> usuarios){
         
         this.usuarios = usuarios;
-        System.out.println(usuarios.get(0).getNombre());
+        System.out.println(usuarios.toArray());
         //c.setUsuarios(usuarios);  // Pasamos la lista al cliente
     } 
     
