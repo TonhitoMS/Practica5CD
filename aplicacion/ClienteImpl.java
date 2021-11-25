@@ -34,7 +34,7 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
     public void notifyMe(ArrayList<Peer> usuarios){
         
         this.usuarios = usuarios;
-        System.out.println(usuarios.toArray());
+        System.out.println(usuarios);
         //c.setUsuarios(usuarios);  // Pasamos la lista al cliente
     } 
     
