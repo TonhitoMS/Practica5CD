@@ -20,13 +20,11 @@ public interface IServidor extends Remote{
    
     
     public void registerForCallback(
-    String nome,
-    ICliente callbackClientObject
+    Peer p
     ) throws java.rmi.RemoteException;
 
 
     public void unregisterForCallback(
-    String nome,
-    ICliente callbackClientObject)
+    Peer p)
     throws java.rmi.RemoteException;
 }

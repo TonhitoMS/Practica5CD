@@ -10,3 +10,10 @@ Create table SerAmigo(
 	id_cliente2 varchar(10) NOT NULL,
 	CONSTRAINT "Amigo_pkey" PRIMARY KEY (id_cliente1, id_cliente2)
 );
+
+Create table Solicitude(
+	id_cliente1 varchar(10) NOT NULL,
+	id_cliente2 varchar(10) NOT NULL,
+        fecha timestamp,
+	CONSTRAINT "Amigo_pkey" PRIMARY KEY (id_cliente1, id_cliente2)
+);

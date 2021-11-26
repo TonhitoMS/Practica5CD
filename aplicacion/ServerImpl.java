@@ -31,10 +31,8 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     
     @Override
     public synchronized void registerForCallback(
-    String nome,
-    ICliente callbackClientObject)
+    Peer p)
     throws java.rmi.RemoteException{
-        Peer p = new Peer(nome, callbackClientObject);
         // store the callback object into the vector        
         if (!(clientList.contains(p))) {
             clientList.add(p);
@@ -47,10 +45,8 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
 
     @Override
     public synchronized void unregisterForCallback(
-    String nome,
-    ICliente callbackClientObject) 
+    Peer p) 
     throws java.rmi.RemoteException{
-        Peer p = new Peer(nome, callbackClientObject);
 
         if (clientList.remove(p)) {
             
