@@ -6,6 +6,7 @@
 
 package aplicacion;
 
+import gui.VCliente;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.rmi.server.UnicastRemoteObject;
@@ -17,12 +18,12 @@ import java.rmi.server.UnicastRemoteObject;
 public class ClienteImpl extends UnicastRemoteObject implements ICliente {
     
     private ArrayList<Peer> usuarios;
-    private Cliente c;
+    private VCliente c;
     
     
-    public ClienteImpl(/*Cliente c*/) throws RemoteException {
-        super( );
-        //this.c = c;
+    public ClienteImpl(VCliente c) throws RemoteException {
+        super();
+        this.c = c;
     }
     
     @Override
@@ -36,6 +37,9 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
         this.usuarios = usuarios;
         System.out.println(usuarios);
         //c.setUsuarios(usuarios);  // Pasamos la lista al cliente
+        
+        // Actualizamos la tabla de los usuarios
+        actualizarTablaUsuarios(usuarios);
     } 
     
     public Peer getPeer(String nome){
@@ -47,6 +51,14 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
         }
         
         return result;
+    }
+    
+    private void actualizarTablaUsuarios(ArrayList<Peer> usuarios){
+        ModeloTablaUsuarios m = new ModeloTablaUsuarios();
+        
+        c.getTablaUsuarios().setModel(m);
+        
+        m.setFilas(usuarios);
     }
 
 }

@@ -5,6 +5,22 @@
  */
 package gui;
 
+import aplicacion.ClienteImpl;
+import aplicacion.ICliente;
+import aplicacion.IServidor;
+import aplicacion.ModeloTablaUsuarios;
+import aplicacion.Peer;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+
 /**
  *
  * @author Sammy Guergachi <sguergachi at gmail.com>
@@ -12,19 +28,66 @@ package gui;
 public class VCliente extends javax.swing.JFrame {
     
     aplicacion.FachadaAplicacion fa;
+    
+    private IServidor h;
+    private ICliente IC;
+    
+    private String hostName;
+    private String portNum;
+    private String username;
+    
     /**
      * Creates new form VCliente
      */
-    public VCliente(aplicacion.FachadaAplicacion fa) {
+    public VCliente(aplicacion.FachadaAplicacion fa, String hostName, String portNum, String username) {
         this.fa=fa;
+        this.hostName = hostName;
+        this.portNum = portNum;
+        this.username = username;
         
-        this.setBounds(0,0,970,970);
+        this.setVisible(true);
         
         initComponents();
-
-        setLocationRelativeTo(null); // Localizar o JFRame no centro da pantalla
+        
+        setLocationRelativeTo(null);  // localizar el JFRame en el centro de la pantalla
+        
+        this.setTitle("P2P-App");
+        
+        // Iniciamos el cliente
+        startClient();
+    }
+    
+    private void startClient(){
+        
+        try {
+            String registryURL = "rmi://" +this.hostName+ ":" + this.portNum + "/callback";
+            
+            this.h = (IServidor)Naming.lookup(registryURL);
+            
+            System.out.println("Lookup completed " );
+            
+            //Código para rexistrar o peer no servidor nas probas iniciais
+            this.IC = new ClienteImpl(this);
+            Peer peer = new Peer(username, IC);
+            
+            System.out.println(h.sayHello());
+    //          System.out.println(peer.getCl());
+    
+            h.registerForCallback(peer);
+            
+        } catch(Exception e){
+            System.out.println("Exception: "+ e);
+            JOptionPane.showMessageDialog(null, "Hubo un problema al conectarse al servidor.");
+            System.exit(0);
+        }
+        
     }
 
+    public JTable getTablaUsuarios() {
+        return TablaUsuarios;
+    }  
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,17 +97,37 @@ public class VCliente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TablaUsuarios = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        TablaUsuarios.setModel(new ModeloTablaUsuarios());
+        jScrollPane1.setViewportView(TablaUsuarios);
+
+        jLabel2.setFont(jLabel2.getFont().deriveFont(jLabel2.getFont().getStyle() & ~java.awt.Font.BOLD, jLabel2.getFont().getSize()+14));
+        jLabel2.setText("Whatsapp");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
+                .addContainerGap(177, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -52,5 +135,8 @@ public class VCliente extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaUsuarios;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

@@ -43,7 +43,7 @@ public class Cliente {
             "Introduce o nome do usuario:");
           PeerId = br.readLine();
           //Código para rexistrar o peer no servidor nas probas iniciais
-          ICliente IC = new ClienteImpl();
+          ICliente IC = new ClienteImpl(null);
           Peer peer = new Peer(PeerId, IC);
           System.out.println(h.sayHello());
 //          System.out.println(peer.getCl());
