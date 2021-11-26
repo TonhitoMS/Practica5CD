@@ -6,6 +6,7 @@
 
 package aplicacion;
 
+import baseDatos.FachadaBaseDatos;
 import java.rmi.*;
 import java.rmi.server.*;
 import java.rmi.registry.Registry;
@@ -52,6 +53,8 @@ public class Servidor  {
             
             System.out.println(registryURL);
             System.out.println("Server ready.");
+            
+            FachadaAplicacion fa = new FachadaAplicacion();
         }
         catch (Exception re) {
             re.printStackTrace();
