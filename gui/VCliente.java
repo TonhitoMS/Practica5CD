@@ -13,6 +13,8 @@ import aplicacion.Peer;
 import java.awt.Panel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,9 +22,12 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -50,10 +55,15 @@ public class VCliente extends javax.swing.JFrame {
     private String username;
     
     private ArrayList<Peer> listaUsuarios;
+    private Peer peer;
     private Peer peerActual;
     
     /**
      * Creates new form VCliente
+     * @param fa
+     * @param hostName
+     * @param portNum
+     * @param username
      */
     public VCliente(aplicacion.FachadaAplicacion fa, String hostName, String portNum, String username) {
         this.fa=fa;
@@ -68,18 +78,40 @@ public class VCliente extends javax.swing.JFrame {
         panelMensajes.setText("CHAT\n\n");
         
         textoEnviar.addKeyListener(new KeyAdapter() {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                enviarMensaje();
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    enviarMensaje();
+                }
             }
-        }
 
         });
         
         setLocationRelativeTo(null);  // localizar el JFRame en el centro de la pantalla
         
         this.setTitle("P2P-App");
+        
+        // Confirmacion por si cerramos la ventana
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                int result = JOptionPane.showConfirmDialog(null,
+                    "Quieres cerrar la aplicación?", "Confirmación de salida: ",
+                    JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION){
+                    
+                    try {
+                        h.unregisterForCallback(peer);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(VCliente.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    System.exit(0);
+                }
+                else{
+                    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }
+            }
+        });
         
         // Iniciamos el cliente
         startClient();
@@ -96,12 +128,12 @@ public class VCliente extends javax.swing.JFrame {
             
             //Código para rexistrar o peer no servidor nas probas iniciais
             this.IC = new ClienteImpl(this);
-            Peer peer = new Peer(username, IC);
+            this.peer = new Peer(username, IC);
             
             System.out.println(h.sayHello());
     //          System.out.println(peer.getCl());
     
-            h.registerForCallback(peer);
+            this.h.registerForCallback(peer);
             
         } catch(Exception e){
             System.out.println("Exception: "+ e);
@@ -148,6 +180,7 @@ public class VCliente extends javax.swing.JFrame {
                 peerActual.getCl().message(textoEnviar.getText());
                 
                 imprimirMensaje(textoEnviar.getText());
+                imprimirHora("derecha");
                 
                 textoEnviar.setText("");
                 
@@ -193,17 +226,22 @@ public class VCliente extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(textoEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEnviar)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(textoEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnEnviar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane3)
+                                .addGap(1, 1, 1))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -211,7 +249,7 @@ public class VCliente extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane3)
@@ -219,7 +257,7 @@ public class VCliente extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(textoEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnEnviar)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -244,8 +282,42 @@ public class VCliente extends javax.swing.JFrame {
             
         } catch(Exception e){
             System.out.println("Excepction: " +e);
-        }
+        }       
+    }
+    
+    public void imprimirHora(String align){
+        try{
+            StyledDocument doc = panelMensajes.getStyledDocument();
+
+            SimpleAttributeSet set = new SimpleAttributeSet();
+            if(align.equals("derecha")){
+                StyleConstants.setAlignment(set, StyleConstants.ALIGN_RIGHT);
+            }
+            if(align.equals("izquierda")){
+                StyleConstants.setAlignment(set, StyleConstants.ALIGN_LEFT);
+            }
+            
+            StyleConstants.setFontSize(set, 8);
+            
+            int length = doc.getLength();
+            doc.insertString(doc.getLength(), obtenerHora() + "\n", null);
+            doc.setParagraphAttributes(length+1, 1, set, false);
+            
+        } catch(Exception e){
+            System.out.println("Excepction: " +e);
+        }      
+    }
+    
+    private String obtenerHora(){
         
+        Formatter formate = new Formatter();
+        // Creating a calendar
+        Calendar gfg_calender = Calendar.getInstance();
+
+        // '%tl' for hours and '%tM' for minutes
+        formate.format("%tl:%tM", gfg_calender, gfg_calender);
+        
+        return formate.toString();
     }
     
 

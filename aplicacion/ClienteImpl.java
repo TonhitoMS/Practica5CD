@@ -47,6 +47,9 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
             doc.insertString(doc.getLength(), s + "\n", null);
             doc.setParagraphAttributes(length+1, 1, set, false);
             
+            // imprimimos la hora a la que recibimos el mensaje
+            c.imprimirHora("izquierda");
+            
         } catch(Exception e){
             System.out.println("Excepction: " +e);
         }
@@ -82,22 +85,6 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
         c.getTablaUsuarios().setModel(m);
         
         m.setFilas(usuarios);
-        
-        
-//        DefaultListModel model = new DefaultListModel();
-//        
-//        
-//        String nombreFecha = String.format("%-10s %40s", "pablo", "26/11/2021");
-//            //String paquete = nombreFecha + "hola me llamo tonto";
-//        
-//        PaqueteChat paquete = new PaqueteChat(nombreFecha, "hola soy tonto");
-//            
-//        model.addElement(paquete);
-//        //model.addElement(new JSeparator());
-//        //model.addElement(new JSeparator());
-//
-//        c.getListaTexto().setModel(model);
-//        c.getListaTexto().setCellRenderer(new ListCellRenderer());
     }
 
 }
