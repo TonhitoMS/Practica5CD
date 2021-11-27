@@ -71,8 +71,16 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
             // convert the vector object to a callback object
             Peer nextClient = (Peer)clientList.get(i);
             
+            // creamos la lista para enviar al cliente, quitandole a el mismo de la lista
+            ArrayList<Peer> newClientList = new ArrayList<>();
+            
+            for (Peer p : clientList){
+                if(!p.equals(nextClient)){
+                    newClientList.add(p);
+                }
+            }
             // mandamos la lista de usuarios conectados al cliente
-            nextClient.getCl().notifyMe(clientList);
+            nextClient.getCl().notifyMe(newClientList);
             
         }// end for
         System.out.println("********************************\n" +

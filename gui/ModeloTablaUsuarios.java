@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package aplicacion;
+package gui;
 
+import aplicacion.Peer;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
