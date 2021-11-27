@@ -17,6 +17,7 @@ import java.util.Properties;
 public class FachadaBaseDatos {
     private aplicacion.FachadaAplicacion fa;
     private java.sql.Connection conexion;
+    private DAOServidor daoServidor;
     
     // constructor
     public FachadaBaseDatos (aplicacion.FachadaAplicacion fa){
@@ -26,7 +27,7 @@ public class FachadaBaseDatos {
         FileInputStream arqConfiguracion;
 
         try {
-            arqConfiguracion = new FileInputStream("baseDatos.properties");
+            arqConfiguracion = new FileInputStream("./src/baseDatos.properties");
             configuracion.load(arqConfiguracion);
             arqConfiguracion.close();
 
@@ -42,6 +43,9 @@ public class FachadaBaseDatos {
                     configuracion.getProperty("puerto")+"/"+
                     configuracion.getProperty("baseDatos"),
                     usuario);
+            daoServidor = new DAOServidor(conexion, fa);
+            System.out.println(daoServidor.obterAmigos("antonio"));
+            
 
 
         } catch (IOException | java.sql.SQLException e){
@@ -54,4 +58,6 @@ public class FachadaBaseDatos {
         
         
     }
+    
+    
 }
