@@ -203,6 +203,13 @@ public class VCliente extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         panelMensajes = new javax.swing.JTextPane();
         btnEnviar = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        btnCambiarContrasena = new javax.swing.JMenuItem();
+        btnCerrarSesion = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        btnVerSolicitudes = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -221,6 +228,43 @@ public class VCliente extends javax.swing.JFrame {
             }
         });
 
+        jMenu1.setText("Usuario");
+
+        btnCambiarContrasena.setText("Cambiar contraseña");
+        jMenu1.add(btnCambiarContrasena);
+
+        btnCerrarSesion.setText("Cerrar sesión");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
+        jMenu1.add(btnCerrarSesion);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Solicitudes");
+
+        btnVerSolicitudes.setText("Ver solicitudes");
+        btnVerSolicitudes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerSolicitudesActionPerformed(evt);
+            }
+        });
+        jMenu2.add(btnVerSolicitudes);
+
+        jMenuItem1.setText("Añadir amigo");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -233,7 +277,7 @@ public class VCliente extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(textoEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                                .addComponent(textoEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnEnviar))
                             .addGroup(layout.createSequentialGroup()
@@ -257,7 +301,7 @@ public class VCliente extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(textoEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnEnviar)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -267,6 +311,27 @@ public class VCliente extends javax.swing.JFrame {
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         enviarMensaje();
     }//GEN-LAST:event_btnEnviarActionPerformed
+
+    private void btnVerSolicitudesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerSolicitudesActionPerformed
+        // TODO add your handling code here:
+        VSolicitudes solicitudes = new VSolicitudes();
+    }//GEN-LAST:event_btnVerSolicitudesActionPerformed
+
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        // TODO add your handling code here:
+        try {
+            h.unregisterForCallback(peer);
+        } catch (RemoteException ex) {
+            Logger.getLogger(VCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.exit(0);
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        String input = JOptionPane.showInputDialog(null, "Introduzca el nombre del usuario: ");
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
     
     private void imprimirMensaje(String mensaje){
         
@@ -323,8 +388,15 @@ public class VCliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TablaUsuarios;
+    private javax.swing.JMenuItem btnCambiarContrasena;
+    private javax.swing.JMenuItem btnCerrarSesion;
     private javax.swing.JButton btnEnviar;
+    private javax.swing.JMenuItem btnVerSolicitudes;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextPane panelMensajes;
