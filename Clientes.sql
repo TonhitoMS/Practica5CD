@@ -17,7 +17,7 @@ Create table SerAmigo(
       		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-Create table Solicitude(
+Create table Solicitude( --cliente1 envía solicitude a cliente2
 	id_cliente1 varchar(10) NOT NULL,
 	id_cliente2 varchar(10) NOT NULL,
         fecha timestamp,
