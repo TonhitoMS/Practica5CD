@@ -19,12 +19,37 @@ public interface IServidor extends Remote{
         throws java.rmi.RemoteException;
    
     
-    public void registerForCallback(
-    Peer p
-    ) throws java.rmi.RemoteException;
+    public void registerForCallback(Peer p) 
+            throws java.rmi.RemoteException;
 
 
-    public void unregisterForCallback(
-    Peer p)
+    public void unregisterForCallback(Peer p)
     throws java.rmi.RemoteException;
+    
+    public ArrayList<String> obterAmigos(String nome)
+            throws java.rmi.RemoteException;
+    
+    public String iniciarSesion(String nome, String contrasinal)
+            throws java.rmi.RemoteException;
+    
+    public ArrayList<Solicitud> obterSolicitudes(String nome)
+            throws java.rmi.RemoteException;
+        
+        
+    public void novoCliente(String nome, String clave)
+            throws java.rmi.RemoteException;
+    
+    public void novoAmigo(String nome1, String nome2)
+            throws java.rmi.RemoteException;
+    
+    
+    public void novaSolicitude(String nome1, String nome2)
+            throws java.rmi.RemoteException;
+
+        
+    public void aceptaSolicitude(String nome1, String nome2)
+            throws java.rmi.RemoteException;
+    
+    public void borrarSolicitude(String nome1, String nome2)
+            throws java.rmi.RemoteException;
 }

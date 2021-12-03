@@ -4,6 +4,7 @@
  */
 package baseDatos;
 
+import aplicacion.Solicitud;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -74,7 +75,7 @@ public class DAOServidor extends AbstractDAO {
             stmAmigos.setString(2, contrasinal);
             rsAmigos = stmAmigos.executeQuery();
             if (rsAmigos.next()) {
-                result = rsAmigos.getString("id_cliente1");
+                result = rsAmigos.getString("id_cliente");
             }
 
         } catch (SQLException e) {
@@ -90,22 +91,23 @@ public class DAOServidor extends AbstractDAO {
         return result;
     }
     
-    public ArrayList<String> obterSolicitudes(String nome){
+    public ArrayList<Solicitud> obterSolicitudes(String nome){
         Connection con;
         PreparedStatement stmAmigos = null;
         ResultSet rsAmigos;
-        ArrayList<String> Amigos = new ArrayList();
+        ArrayList<Solicitud> Amigos = new ArrayList();
         
         con = super.getConexion();
         try {
             con.setAutoCommit(true);
-            stmAmigos = con.prepareStatement("select id_cliente1 "
+            stmAmigos = con.prepareStatement("select id_cliente1, id_cliente2, fecha "
                     + "from Solicitude "
                     + "where id_cliente2 = ? ");
             stmAmigos.setString(1, nome);
             rsAmigos = stmAmigos.executeQuery();
             while (rsAmigos.next()) {
-                Amigos.add(rsAmigos.getString("id_cliente2"));
+                Amigos.add(new Solicitud(rsAmigos.getString("id_cliente1"), rsAmigos.getString("id_cliente1"), 
+                rsAmigos.getDate("fecha")));
             }
 
         } catch (SQLException e) {
@@ -155,7 +157,7 @@ public class DAOServidor extends AbstractDAO {
         
         con = super.getConexion();
         try {
-            con.setAutoCommit(true);
+            con.setAutoCommit(false);
             stmCliente = con.prepareStatement("insert into SerAmigo values(?, ?)");
             stmCliente.setString(1, nome1);
             stmCliente.setString(2, nome2);
@@ -165,6 +167,13 @@ public class DAOServidor extends AbstractDAO {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
 //            this.getFachadaAplicacion().muestraExcepcion(e.getMessage());
+            if (con != null) {
+                try {
+                    con.rollback();   // Deshacer operaciones
+                } catch (SQLException ex) {
+                    System.out.println(ex.toString());
+                }
+            }
         } finally {
             try {
                 stmCliente.close();
@@ -183,10 +192,9 @@ public class DAOServidor extends AbstractDAO {
         con = super.getConexion();
         try {
             con.setAutoCommit(true);
-            stmCliente = con.prepareStatement("insert into Soliciude values(?, ?, ?)");
+            stmCliente = con.prepareStatement("insert into Solicitude values(?, ?, NOW())");
             stmCliente.setString(1, nome1);
             stmCliente.setString(2, nome2);
-            stmCliente.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
 
             stmCliente.executeUpdate();
 
@@ -210,16 +218,53 @@ public class DAOServidor extends AbstractDAO {
         
         con = super.getConexion();
         try {
-            con.setAutoCommit(true);
-            stmCliente = con.prepareStatement("delete from Soliciude "
-                    + "where id_usuario2 = ? "
-                    + "and id_usuario1 = ?");
+            con.setAutoCommit(false);
+            stmCliente = con.prepareStatement("delete from Solicitude "
+                    + "where id_cliente2 = ? "
+                    + "and id_cliente1 = ?");
             stmCliente.setString(1, nome1);
             stmCliente.setString(2, nome2);
 
             stmCliente.executeUpdate();
             this.novoAmigo(nome1, nome2);
+            
+            con.commit();
 
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+//            this.getFachadaAplicacion().muestraExcepcion(e.getMessage());
+            if (con != null) {
+                try {
+                    con.rollback();   // Deshacer operaciones
+                } catch (SQLException ex) {
+                    System.out.println(ex.toString());
+                }
+            }
+        } finally {
+            try {
+                stmCliente.close();
+            } catch (SQLException e) {
+                System.out.println("Imposible cerrar cursores");
+            }
+        }
+       
+    }
+    
+    public void borrarSolicitude(String nome1, String nome2){
+        Connection con;
+        PreparedStatement stmCliente = null;
+        ResultSet rsAmigos;
+        
+        con = super.getConexion();
+        try {
+            con.setAutoCommit(true);
+            stmCliente = con.prepareStatement("delete from Solicitude "
+                    + "where id_cliente1 = ? "
+                    + "and id_cliente2 = ?");
+            stmCliente.setString(1, nome1);
+            stmCliente.setString(2, nome2);
+
+            stmCliente.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
 //            this.getFachadaAplicacion().muestraExcepcion(e.getMessage());
@@ -230,6 +275,7 @@ public class DAOServidor extends AbstractDAO {
                 System.out.println("Imposible cerrar cursores");
             }
         }
+       
     }
 
     

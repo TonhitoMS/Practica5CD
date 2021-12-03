@@ -27,5 +27,6 @@ public class FachadaAplicacion {
     public void nuevoAviso(String mensaje){
         fgui.nuevoAviso(mensaje);
     }
+    
 
 }

@@ -6,6 +6,7 @@
 
 package aplicacion;
 
+import baseDatos.FachadaBaseDatos;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * @author Sammy Guergachi <sguergachi at gmail.com>
  */
 public class ServerImpl extends UnicastRemoteObject implements IServidor{
-
+    private FachadaBaseDatos fbd;
     
     private ArrayList<Peer> clientList;
 
@@ -86,5 +87,45 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
         System.out.println("********************************\n" +
                            "Server completed callbacks ---");
     } // doCallbacks
+
+    @Override
+    public ArrayList<String> obterAmigos(String nome) throws RemoteException {
+        return(fbd.obterAmigos(nome));
+    }
+
+    @Override
+    public String iniciarSesion(String nome, String contrasinal) throws RemoteException {
+        return(fbd.iniciarSesion(nome, contrasinal));
+    }
+
+    @Override
+    public ArrayList<Solicitud> obterSolicitudes(String nome) throws RemoteException {
+        return(fbd.obterSolicitudes(nome));
+    }
+
+    @Override
+    public void novoCliente(String nome, String clave) throws RemoteException {
+        fbd.novoCliente(nome, clave);
+    }
+
+    @Override
+    public void novoAmigo(String nome1, String nome2) throws RemoteException {
+        fbd.novoAmigo(nome1, nome2);
+    }
+
+    @Override
+    public void novaSolicitude(String nome1, String nome2) throws RemoteException {
+        fbd.novaSolicitude(nome1, nome2);
+    }
+
+    @Override
+    public void aceptaSolicitude(String nome1, String nome2) throws RemoteException {
+        fbd.aceptaSolicitude(nome1, nome2);
+    }
+
+    @Override
+    public void borrarSolicitude(String nome1, String nome2) throws RemoteException {
+        fbd.borrarSolicitude(nome1, nome2);
+    }
     
 }

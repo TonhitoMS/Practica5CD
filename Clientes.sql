@@ -20,7 +20,7 @@ Create table SerAmigo(
 Create table Solicitude( --cliente1 envía solicitude a cliente2
 	id_cliente1 varchar(10) NOT NULL,
 	id_cliente2 varchar(10) NOT NULL,
-        fecha timestamp,
+        fecha date,
 	CONSTRAINT "Solicitude_pkey" PRIMARY KEY (id_cliente1, id_cliente2),
 	
 	CONSTRAINT "Solicitude1_fkey" FOREIGN KEY (id_cliente1)
