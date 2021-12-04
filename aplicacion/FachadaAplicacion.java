@@ -21,7 +21,6 @@ public class FachadaAplicacion {
     
     public FachadaAplicacion(){
         fgui = new FachadaGui(this);
-        fbd = new FachadaBaseDatos(this);
     }
     
     public void nuevoAviso(String mensaje){

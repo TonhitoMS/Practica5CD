@@ -26,30 +26,33 @@ public interface IServidor extends Remote{
     public void unregisterForCallback(Peer p)
     throws java.rmi.RemoteException;
     
-    public ArrayList<String> obterAmigos(String nome)
+    public ArrayList<Peer> obterAmigos(String nome, String clave)//modificar para devolver peer
             throws java.rmi.RemoteException;
     
-    public String iniciarSesion(String nome, String contrasinal)
+    public String iniciarSesion(String nome, String clave)
             throws java.rmi.RemoteException;
     
-    public ArrayList<Solicitud> obterSolicitudes(String nome)
+    public ArrayList<Solicitud> obterSolicitudes(String nome, String clave)
             throws java.rmi.RemoteException;
         
         
     public void novoCliente(String nome, String clave)
             throws java.rmi.RemoteException;
     
-    public void novoAmigo(String nome1, String nome2)
+    public void novoAmigo(String nome1, String nome2, String clave)
             throws java.rmi.RemoteException;
     
     
-    public void novaSolicitude(String nome1, String nome2)
+    public void novaSolicitude(String nome1, String nome2, String clave)
             throws java.rmi.RemoteException;
 
         
-    public void aceptaSolicitude(String nome1, String nome2)
+    public void aceptaSolicitude(String nome1, String nome2, String clave)
             throws java.rmi.RemoteException;
     
-    public void borrarSolicitude(String nome1, String nome2)
+    public void borrarSolicitude(String nome1, String nome2, String clave)
+            throws java.rmi.RemoteException;
+    
+    public void modificarCliente(String nome, String clave, String claveNova)
             throws java.rmi.RemoteException;
 }

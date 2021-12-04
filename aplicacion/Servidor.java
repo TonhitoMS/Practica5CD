@@ -55,6 +55,8 @@ public class Servidor  {
             System.out.println("Server ready.");
             
             FachadaAplicacion fa = new FachadaAplicacion();
+            
+            
         }
         catch (Exception re) {
             re.printStackTrace();

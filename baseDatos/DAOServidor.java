@@ -17,12 +17,11 @@ import java.util.ArrayList;
  */
 public class DAOServidor extends AbstractDAO {
     
-    public DAOServidor(Connection conexion, aplicacion.FachadaAplicacion fa) {
+    public DAOServidor(Connection conexion) {
         super.setConexion(conexion);
-        super.setFachadaAplicacion(fa);
     }
     
-    public ArrayList<String> obterAmigos(String nome){
+    public ArrayList<String> obterAmigos(String nome, String clave){
         Connection con;
         PreparedStatement stmAmigos = null;
         ResultSet rsAmigos;
@@ -58,7 +57,7 @@ public class DAOServidor extends AbstractDAO {
         return Amigos;
     }
     
-    public String iniciarSesion(String nome, String contrasinal){
+    public String iniciarSesion(String nome, String clave){
         Connection con;
         PreparedStatement stmAmigos = null;
         ResultSet rsAmigos;
@@ -72,7 +71,7 @@ public class DAOServidor extends AbstractDAO {
                     + "where id_cliente = ? "
                     + "and clave = ?");
             stmAmigos.setString(1, nome);
-            stmAmigos.setString(2, contrasinal);
+            stmAmigos.setString(2, clave);
             rsAmigos = stmAmigos.executeQuery();
             if (rsAmigos.next()) {
                 result = rsAmigos.getString("id_cliente");
@@ -91,11 +90,14 @@ public class DAOServidor extends AbstractDAO {
         return result;
     }
     
-    public ArrayList<Solicitud> obterSolicitudes(String nome){
+    public ArrayList<Solicitud> obterSolicitudes(String nome, String clave){
         Connection con;
         PreparedStatement stmAmigos = null;
         ResultSet rsAmigos;
         ArrayList<Solicitud> Amigos = new ArrayList();
+        
+         if(!this.Autentificación(nome, clave))
+            return Amigos;
         
         con = super.getConexion();
         try {
@@ -184,10 +186,13 @@ public class DAOServidor extends AbstractDAO {
     }
     
     
-    public void novaSolicitude(String nome1, String nome2){
+    public void novaSolicitude(String nome1, String nome2, String clave){
         Connection con;
         PreparedStatement stmCliente = null;
         ResultSet rsAmigos;
+        
+         if(!this.Autentificación(nome1, clave))
+            return;
         
         con = super.getConexion();
         try {
@@ -211,10 +216,13 @@ public class DAOServidor extends AbstractDAO {
     }
 
         
-    public void aceptaSolicitude(String nome1, String nome2){
+    public void aceptaSolicitude(String nome1, String nome2, String clave){
         Connection con;
         PreparedStatement stmCliente = null;
         ResultSet rsAmigos;
+        
+         if(!this.Autentificación(nome1, clave))
+            return;
         
         con = super.getConexion();
         try {
@@ -250,10 +258,13 @@ public class DAOServidor extends AbstractDAO {
        
     }
     
-    public void borrarSolicitude(String nome1, String nome2){
+    public void borrarSolicitude(String nome1, String nome2, String clave){
         Connection con;
         PreparedStatement stmCliente = null;
         ResultSet rsAmigos;
+        
+         if(!this.Autentificación(nome1, clave))
+            return;
         
         con = super.getConexion();
         try {
@@ -277,11 +288,105 @@ public class DAOServidor extends AbstractDAO {
         }
        
     }
+    
+    public String desencript(String encriptado) {
+        int i, ascii;
+        char[] codigo = new char[encriptado.length()];
 
+        codigo[0] = encriptado.charAt(0);
+
+        for (i = 1; i < encriptado.length(); i++) {
+            ascii = ((encriptado.charAt(i) + 128 - codigo[i - 1])) % 128;
+            codigo[i] = (char) ascii;
+        }
+
+        return String.valueOf(codigo);
+    }
+
+    public String encript(String codigo) {
+        int i, ascii;
+        char[] encriptado = new char[codigo.length()];
+
+        encriptado[0] = codigo.charAt(0);
+
+        for (i = 1; i < codigo.length(); i++) {
+            ascii = ((int) codigo.charAt(i) + (int) codigo.charAt(i - 1)) % 128;
+            encriptado[i] = (char) ascii;
+        }
+
+        return String.valueOf(encriptado);
+    }
     
     
 
+    
+    public void modificarCliente(String nome, String clave, String claveNova){
+        Connection con;
+        PreparedStatement stmCliente = null;
+        ResultSet rsAmigos;
+        
+        if(!this.Autentificación(nome, clave))
+            return;
+        con = super.getConexion();
+        try {
+            con.setAutoCommit(true);
+            stmCliente = con.prepareStatement("update Cliente "
+                    + "set clave = ? "
+                    + "where id_cliente = ?");
+            stmCliente.setString(1, claveNova);
+            stmCliente.setString(2, nome);
 
+            stmCliente.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+//            this.getFachadaAplicacion().muestraExcepcion(e.getMessage());
+        } finally {
+            try {
+                stmCliente.close();
+            } catch (SQLException e) {
+                System.out.println("Imposible cerrar cursores");
+            }
+        }
+    }
+
+    
+    
+    
+    public Boolean Autentificación(String nome, String clave){
+        Boolean result = false;
+        Connection con;
+        PreparedStatement stmAmigos = null;
+        ResultSet rsAmigos;
+        ArrayList<Solicitud> Amigos = new ArrayList();
+        
+        con = super.getConexion();
+        try {
+            con.setAutoCommit(true);
+            stmAmigos = con.prepareStatement("select id_cliente "
+                    + "from Cliente "
+                    + "where clave = ? ");
+            stmAmigos.setString(1, clave);
+            rsAmigos = stmAmigos.executeQuery();
+            if (rsAmigos.next()) {
+                result = true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+//            this.getFachadaAplicacion().muestraExcepcion(e.getMessage());
+        } finally {
+            try {
+                stmAmigos.close();
+            } catch (SQLException e) {
+                System.out.println("Imposible cerrar cursores");
+            }
+        }
+
+        return result;
+        
+    
+    }
 
 
 }

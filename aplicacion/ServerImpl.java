@@ -23,6 +23,7 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     public ServerImpl() throws RemoteException {
         super( );
         clientList = new ArrayList<>();
+        fbd = new FachadaBaseDatos();
     }
     
     @Override
@@ -82,25 +83,49 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
             }
             // mandamos la lista de usuarios conectados al cliente
             nextClient.getCl().notifyMe(newClientList);
-            
+            System.out.println(nextClient.getNombre());
+            System.out.println(this.obterAmigos(nextClient.getNombre(), "ola"));
+//            
         }// end for
         System.out.println("********************************\n" +
                            "Server completed callbacks ---");
     } // doCallbacks
 
     @Override
-    public ArrayList<String> obterAmigos(String nome) throws RemoteException {
-        return(fbd.obterAmigos(nome));
+    public ArrayList<Peer> obterAmigos(String nome, String clave) throws RemoteException {
+        ArrayList<String> amigos = fbd.obterAmigos(nome, clave);
+        ArrayList<Peer> result = new ArrayList();
+        
+        
+        ArrayList<Peer> newClientList = new ArrayList<>();
+            
+       
+        for (Peer  p: clientList){
+            if(!p.getNombre().equals(nome)){
+                newClientList.add(p);
+            }
+        }
+        
+        System.out.println(newClientList);
+        System.out.println(amigos);
+        
+        for(String s: amigos){
+            for(Peer p: newClientList){
+                if(p.getNombre().equals(s))
+                    result.add(p);
+            }
+        }
+        return result;
     }
 
     @Override
-    public String iniciarSesion(String nome, String contrasinal) throws RemoteException {
-        return(fbd.iniciarSesion(nome, contrasinal));
+    public String iniciarSesion(String nome, String clave) throws RemoteException {
+        return(fbd.iniciarSesion(nome, clave));
     }
 
     @Override
-    public ArrayList<Solicitud> obterSolicitudes(String nome) throws RemoteException {
-        return(fbd.obterSolicitudes(nome));
+    public ArrayList<Solicitud> obterSolicitudes(String nome, String clave) throws RemoteException {
+        return(fbd.obterSolicitudes(nome, clave));
     }
 
     @Override
@@ -109,23 +134,27 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     }
 
     @Override
-    public void novoAmigo(String nome1, String nome2) throws RemoteException {
+    public void novoAmigo(String nome1, String nome2, String clave) throws RemoteException {
         fbd.novoAmigo(nome1, nome2);
     }
 
     @Override
-    public void novaSolicitude(String nome1, String nome2) throws RemoteException {
-        fbd.novaSolicitude(nome1, nome2);
+    public void novaSolicitude(String nome1, String nome2, String clave) throws RemoteException {
+        fbd.novaSolicitude(nome1, nome2, clave);
     }
 
     @Override
-    public void aceptaSolicitude(String nome1, String nome2) throws RemoteException {
-        fbd.aceptaSolicitude(nome1, nome2);
+    public void aceptaSolicitude(String nome1, String nome2, String clave) throws RemoteException {
+        fbd.aceptaSolicitude(nome1, nome2, clave);
     }
 
     @Override
-    public void borrarSolicitude(String nome1, String nome2) throws RemoteException {
-        fbd.borrarSolicitude(nome1, nome2);
+    public void borrarSolicitude(String nome1, String nome2, String clave) throws RemoteException {
+        fbd.borrarSolicitude(nome1, nome2, clave);
+    }
+    @Override
+    public void modificarCliente(String nome, String clave, String claveNova) throws RemoteException{
+        fbd.modificarCliente(nome, clave, claveNova);
     }
     
 }
