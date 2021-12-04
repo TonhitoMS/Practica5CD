@@ -6,11 +6,13 @@
 
 package aplicacion;
 
+import gui.CustomTableRenderer;
 import gui.ModeloTablaUsuarios;
 import gui.VCliente;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Arrays;
 import javax.swing.DefaultListModel;
 import javax.swing.JSeparator;
 import javax.swing.text.DefaultStyledDocument;
@@ -36,23 +38,59 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
     }
     
     @Override
-    public void message(String s) throws RemoteException {
+    public void message(String s, Peer user) throws RemoteException {
         try{
-            StyledDocument doc = c.getPanelMensajes().getStyledDocument();
-
-            SimpleAttributeSet set = new SimpleAttributeSet();
-            StyleConstants.setAlignment(set, StyleConstants.ALIGN_LEFT);
             
-            int length = doc.getLength();
-            doc.insertString(doc.getLength(), s + "\n", null);
-            doc.setParagraphAttributes(length+1, 1, set, false);
+            for(Amigo amigo : c.getAmigos()){
+                if(amigo.getAmigo().equals(user)){
+                    if(c.getTablaUsuarios().getSelectedRow() != -1 && c.getTablaUsuarios().getValueAt(c.getTablaUsuarios().getSelectedRow(), c.getTablaUsuarios().getSelectedColumn()).equals(amigo.getAmigo().getNombre())){
+                        amigo.getMensajes().add(new ArrayList<>(Arrays.asList(s, "izquierda")));
+                        amigo.getHoras().add(new ArrayList<>(Arrays.asList(c.obtenerHora(), "izquierda")));
+                        
+                        c.imprimirMensaje("izquierda", s);
+                        c.imprimirHora("izquierda", c.obtenerHora());
+                    }
+                    else{
+                        amigo.getMensajes().add(new ArrayList<>(Arrays.asList(s, "izquierda")));
+                        amigo.getHoras().add(new ArrayList<>(Arrays.asList(c.obtenerHora(), "izquierda")));     
+                    }
+                }
+            }
             
-            // imprimimos la hora a la que recibimos el mensaje
-            c.imprimirHora("izquierda");
+//            StyledDocument doc = c.getPanelMensajes().getStyledDocument();
+//
+//            SimpleAttributeSet set = new SimpleAttributeSet();
+//            StyleConstants.setAlignment(set, StyleConstants.ALIGN_LEFT);
+//            
+//            int length = doc.getLength();
+//            doc.insertString(doc.getLength(), s + "\n", null);
+//            doc.setParagraphAttributes(length+1, 1, set, false);
+//            
+//            // imprimimos la hora a la que recibimos el mensaje
+//            c.imprimirHora("izquierda", c.obtenerHora());
             
         } catch(Exception e){
             System.out.println("Excepction: " +e);
         }
+    }
+    
+    @Override
+    public void nuevoMensaje(Peer user){
+        
+        Amigo amigo1 = null;
+        
+        for(Amigo amigo : c.getAmigos()){
+            if(amigo.getAmigo().equals(user)){
+                if(c.getTablaUsuarios().getSelectedRow() == -1 || !c.getTablaUsuarios().getValueAt(c.getTablaUsuarios().getSelectedRow(), c.getTablaUsuarios().getSelectedColumn()).equals(amigo.getAmigo().getNombre())){
+                    amigo.setNuevoMensaje(true);
+                }
+            }
+        }
+        
+        c.getTablaUsuarios().setDefaultRenderer(c.getTablaUsuarios().getColumnClass(0), new CustomTableRenderer(c.getAmigos()));
+
+        c.getTablaUsuarios().repaint();
+   
     }
     
     @Override

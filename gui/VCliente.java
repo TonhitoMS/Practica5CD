@@ -5,12 +5,14 @@
  */
 package gui;
 
+import aplicacion.Amigo;
 import aplicacion.ClienteImpl;
 import aplicacion.ICliente;
 import aplicacion.IServidor;
 import aplicacion.PaqueteChat;
 import aplicacion.Peer;
 import java.awt.Panel;
+import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -22,6 +24,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Formatter;
 import java.util.logging.Level;
@@ -32,7 +35,9 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.PlainDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -55,8 +60,13 @@ public class VCliente extends javax.swing.JFrame {
     private String username;
     
     private ArrayList<Peer> listaUsuarios;
+    private ArrayList<Amigo> amigos;
+    private ArrayList<Amigo> amigosEnLinea;
+    private ArrayList<String> amigosNuevoMensaje;
+    
     private Peer peer;
     private Peer peerActual;
+    private Amigo amigoActual;
     
     /**
      * Creates new form VCliente
@@ -71,11 +81,17 @@ public class VCliente extends javax.swing.JFrame {
         this.portNum = portNum;
         this.username = username;
         
+        this.amigos = new ArrayList<>();
+        this.amigosEnLinea = new ArrayList<>();
+        this.amigosNuevoMensaje = new ArrayList<>();
+        
         this.setVisible(true);
         
         initComponents();
         
-        panelMensajes.setText("CHAT\n\n");
+        TablaUsuarios.getSelectionModel().clearSelection();
+        
+        textoHola.setText("Hola, "+this.username);
         
         textoEnviar.addKeyListener(new KeyAdapter() {
             @Override
@@ -113,8 +129,53 @@ public class VCliente extends javax.swing.JFrame {
             }
         });
         
+        // evento click de la tabla
+        TablaUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = TablaUsuarios.rowAtPoint(evt.getPoint());
+                int col = TablaUsuarios.columnAtPoint(evt.getPoint());
+                if (row >= 0 && col >= 0) {
+                   
+                    String nombre =  (String) TablaUsuarios.getValueAt(row, col);
+                
+                    if(cambiarAmigoActual(nombre)){
+                        if(amigoActual.isNuevoMensaje()){
+                            amigoActual.setNuevoMensaje(false);
+                            TablaUsuarios.setDefaultRenderer(TablaUsuarios.getColumnClass(0), new CustomTableRenderer(amigos));
+                            TablaUsuarios.repaint();
+                        }
+                        panelMensajes.setText("");
+                        
+                        panelMensajes.setText("CHAT DE "+amigoActual.getAmigo().getNombre()+"\n\n");
+                        
+                        if(!amigoActual.getMensajes().isEmpty()){
+                            for(int i=0; i<amigoActual.getMensajes().size(); i++){
+                                imprimirMensaje(amigoActual.getMensajes().get(i).get(1), amigoActual.getMensajes().get(i).get(0));
+                                imprimirHora(amigoActual.getHoras().get(i).get(1), amigoActual.getHoras().get(i).get(0));
+                            }
+                        }
+                    }
+                  
+                }
+            }
+        });
+        
         // Iniciamos el cliente
         startClient();
+    }
+    
+    
+    private boolean cambiarAmigoActual(String nombre){
+        if(this.amigoActual == null || !this.amigoActual.getAmigo().getNombre().equals(nombre)){
+            for(Amigo amigo : this.amigos){
+                if(amigo.getAmigo().getNombre().equals(nombre)){
+                    this.amigoActual = amigo;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     private void startClient(){
@@ -136,27 +197,36 @@ public class VCliente extends javax.swing.JFrame {
             this.h.registerForCallback(peer);
             
         } catch(Exception e){
-            System.out.println("Exception: "+ e);
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Hubo un problema al conectarse al servidor.");
             System.exit(0);
         }
         
     }
 
-    public JTable getTablaUsuarios() {
-        return TablaUsuarios;
-    }  
-
-    public JTextPane getPanelMensajes() {
-        return panelMensajes;
-    }
-
-//    public JList<PaqueteChat> getListaTexto() {
-//        return listaTexto;
-//    }
 
     public void setListaUsuarios(ArrayList<Peer> listaUsuarios) {
         this.listaUsuarios = listaUsuarios;
+        // añadimos los peer a la lista de amigos
+        
+        ArrayList<Amigo> añadir = new ArrayList<>();
+        
+        for(Peer peer : this.listaUsuarios){
+            
+            if(this.amigos.isEmpty()){
+                this.amigos.add(new Amigo(peer));
+            }
+            else{
+                for(Amigo amigo : this.amigos){
+
+                    if(!amigo.getAmigo().equals(peer)){
+                        añadir.add(new Amigo(peer));
+                    }
+                }
+                
+                this.amigos.addAll(añadir);
+            }
+        }
     }
     
     // funcion para enviar un mensaje a otro peer
@@ -167,20 +237,14 @@ public class VCliente extends javax.swing.JFrame {
                 
                 int row = TablaUsuarios.getSelectedRow();
                 int col = TablaUsuarios.getSelectedColumn();
-                String nombre =  (String) TablaUsuarios.getValueAt(row, col);
                 
-                if(peerActual == null || !peerActual.getNombre().equals(nombre)){
-                    for(Peer peer : this.listaUsuarios){
-                        if(peer.getNombre().equals(nombre)){
-                            peerActual = peer;
-                        }
-                    }
-                }
-
-                peerActual.getCl().message(textoEnviar.getText());
+                amigoActual.getAmigo().getCl().message(textoEnviar.getText(), peer);
+                amigoActual.getAmigo().getCl().nuevoMensaje(peer);  // notificamos a nuestro amigo de que recibio un nuevo mensaje
+                amigoActual.getMensajes().add(new ArrayList<>(Arrays.asList(textoEnviar.getText(), "derecha")));  // añadimos el mensaje al array de mensajes
+                imprimirMensaje("derecha", textoEnviar.getText());
                 
-                imprimirMensaje(textoEnviar.getText());
-                imprimirHora("derecha");
+                amigoActual.getHoras().add(new ArrayList<>(Arrays.asList(obtenerHora(), "derecha")));
+                imprimirHora("derecha", obtenerHora());
                 
                 textoEnviar.setText("");
                 
@@ -193,12 +257,13 @@ public class VCliente extends javax.swing.JFrame {
             Logger.getLogger(VCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaUsuarios = new javax.swing.JTable();
-        jLabel2 = new javax.swing.JLabel();
+        textoHola = new javax.swing.JLabel();
         textoEnviar = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         panelMensajes = new javax.swing.JTextPane();
@@ -214,11 +279,23 @@ public class VCliente extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         TablaUsuarios.setModel(new ModeloTablaUsuarios());
+        TablaUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaUsuariosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(TablaUsuarios);
 
-        jLabel2.setFont(jLabel2.getFont().deriveFont(jLabel2.getFont().getStyle() & ~java.awt.Font.BOLD, jLabel2.getFont().getSize()+14));
-        jLabel2.setText("Whatsapp");
+        textoHola.setFont(textoHola.getFont().deriveFont(textoHola.getFont().getStyle() & ~java.awt.Font.BOLD, textoHola.getFont().getSize()+14));
+        textoHola.setText("Hola, ");
 
+        panelMensajes.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                panelMensajesInputMethodTextChanged(evt);
+            }
+        });
         jScrollPane3.setViewportView(panelMensajes);
 
         btnEnviar.setText("Enviar");
@@ -272,36 +349,34 @@ public class VCliente extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textoHola, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(textoEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                                .addComponent(textoEnviar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnEnviar))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane3)
-                                .addGap(1, 1, 1))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(1, 1, 1)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(textoHola, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(textoEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnEnviar)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -332,14 +407,30 @@ public class VCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
         String input = JOptionPane.showInputDialog(null, "Introduzca el nombre del usuario: ");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void TablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaUsuariosMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TablaUsuariosMouseClicked
+
+    private void panelMensajesInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_panelMensajesInputMethodTextChanged
+        // TODO add your handling code here:
+        int height = (int)this.panelMensajes.getPreferredSize().getHeight();
+        Rectangle rect = new Rectangle(0,height,10,10);
+        this.panelMensajes.scrollRectToVisible(rect);
+    }//GEN-LAST:event_panelMensajesInputMethodTextChanged
     
-    private void imprimirMensaje(String mensaje){
+    public void imprimirMensaje(String align, String mensaje){
         
         try{
             StyledDocument doc = panelMensajes.getStyledDocument();
-
+            
             SimpleAttributeSet set = new SimpleAttributeSet();
-            StyleConstants.setAlignment(set, StyleConstants.ALIGN_RIGHT);
+            if(align.equals("derecha")){
+                StyleConstants.setAlignment(set, StyleConstants.ALIGN_RIGHT);
+            }
+            if(align.equals("izquierda")){
+                StyleConstants.setAlignment(set, StyleConstants.ALIGN_LEFT);
+            }
             
             int length = doc.getLength();
             doc.insertString(doc.getLength(), mensaje + "\n", null);
@@ -350,7 +441,7 @@ public class VCliente extends javax.swing.JFrame {
         }       
     }
     
-    public void imprimirHora(String align){
+    public void imprimirHora(String align, String hora){
         try{
             StyledDocument doc = panelMensajes.getStyledDocument();
 
@@ -365,7 +456,7 @@ public class VCliente extends javax.swing.JFrame {
             StyleConstants.setFontSize(set, 8);
             
             int length = doc.getLength();
-            doc.insertString(doc.getLength(), obtenerHora() + "\n", null);
+            doc.insertString(doc.getLength(), hora + "\n", null);
             doc.setParagraphAttributes(length+1, 1, set, false);
             
         } catch(Exception e){
@@ -373,7 +464,7 @@ public class VCliente extends javax.swing.JFrame {
         }      
     }
     
-    private String obtenerHora(){
+    public String obtenerHora(){
         
         Formatter formate = new Formatter();
         // Creating a calendar
@@ -384,6 +475,29 @@ public class VCliente extends javax.swing.JFrame {
         
         return formate.toString();
     }
+
+    public ArrayList<Amigo> getAmigos() {
+        return amigos;
+    }
+
+    public ArrayList<Amigo> getAmigosEnLinea() {
+        return amigosEnLinea;
+    }
+    
+    
+    public JTable getTablaUsuarios() {
+        return TablaUsuarios;
+    }  
+
+    public JTextPane getPanelMensajes() {
+        return panelMensajes;
+    }
+
+    public ArrayList<String> getAmigosNuevoMensaje() {
+        return amigosNuevoMensaje;
+    }
+    
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -392,7 +506,6 @@ public class VCliente extends javax.swing.JFrame {
     private javax.swing.JMenuItem btnCerrarSesion;
     private javax.swing.JButton btnEnviar;
     private javax.swing.JMenuItem btnVerSolicitudes;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -401,5 +514,6 @@ public class VCliente extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextPane panelMensajes;
     private javax.swing.JTextField textoEnviar;
+    private javax.swing.JLabel textoHola;
     // End of variables declaration//GEN-END:variables
 }

@@ -70,8 +70,8 @@ public class ModeloTablaUsuarios extends AbstractTableModel{
         fireTableDataChanged();
     }
 
-    public Peer obtenerNombre(int i){
-        return this.usuarios.get(i);
+    public String obtenerNombre(int i){
+        return this.usuarios.get(i).getNombre();
     }
 
 }
