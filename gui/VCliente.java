@@ -238,10 +238,20 @@ public class VCliente extends javax.swing.JFrame {
                 int row = TablaUsuarios.getSelectedRow();
                 int col = TablaUsuarios.getSelectedColumn();
                 
-                amigoActual.getAmigo().getCl().message(textoEnviar.getText(), peer);
+                String mensaje = textoEnviar.getText();
+                
+                StringBuilder nuevoMensaje = new StringBuilder(mensaje);
+
+                int i = 0;
+                while ((i = nuevoMensaje.indexOf(" ", i + 28)) != -1) {
+                    nuevoMensaje.replace(i, i + 1, "\n");
+                }
+                
+                
+                amigoActual.getAmigo().getCl().message(nuevoMensaje.toString(), peer);
                 amigoActual.getAmigo().getCl().nuevoMensaje(peer);  // notificamos a nuestro amigo de que recibio un nuevo mensaje
-                amigoActual.getMensajes().add(new ArrayList<>(Arrays.asList(textoEnviar.getText(), "derecha")));  // añadimos el mensaje al array de mensajes
-                imprimirMensaje("derecha", textoEnviar.getText());
+                amigoActual.getMensajes().add(new ArrayList<>(Arrays.asList(nuevoMensaje.toString(), "derecha")));  // añadimos el mensaje al array de mensajes
+                imprimirMensaje("derecha", nuevoMensaje.toString());
                 
                 amigoActual.getHoras().add(new ArrayList<>(Arrays.asList(obtenerHora(), "derecha")));
                 imprimirHora("derecha", obtenerHora());
@@ -353,13 +363,13 @@ public class VCliente extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(textoEnviar)
+                                .addComponent(textoEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnEnviar))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane3)
                                 .addGap(1, 1, 1)))))
                 .addContainerGap())
         );
@@ -371,12 +381,12 @@ public class VCliente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
+                        .addComponent(jScrollPane3)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(textoEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnEnviar)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
 
@@ -432,9 +442,14 @@ public class VCliente extends javax.swing.JFrame {
                 StyleConstants.setAlignment(set, StyleConstants.ALIGN_LEFT);
             }
             
-            int length = doc.getLength();
-            doc.insertString(doc.getLength(), mensaje + "\n", null);
-            doc.setParagraphAttributes(length+1, 1, set, false);
+            mensaje.trim();
+            ArrayList<String> listaMensajes = new ArrayList<String>(Arrays.asList(mensaje.split("\n")));
+            
+            for(String s : listaMensajes){
+                int length = doc.getLength();
+                doc.insertString(doc.getLength(), s + "\n", null);
+                doc.setParagraphAttributes(length+1, 1, set, false);
+            }
             
         } catch(Exception e){
             System.out.println("Excepction: " +e);
