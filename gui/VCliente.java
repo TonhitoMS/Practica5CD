@@ -243,7 +243,7 @@ public class VCliente extends javax.swing.JFrame {
                 StringBuilder nuevoMensaje = new StringBuilder(mensaje);
 
                 int i = 0;
-                while ((i = nuevoMensaje.indexOf(" ", i + 28)) != -1) {
+                while ((i = nuevoMensaje.indexOf(" ", i + 35)) != -1) {
                     nuevoMensaje.replace(i, i + 1, "\n");
                 }
                 
