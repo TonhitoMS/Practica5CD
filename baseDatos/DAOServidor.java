@@ -71,7 +71,7 @@ public class DAOServidor extends AbstractDAO {
                     + "where id_cliente = ? "
                     + "and clave = ?");
             stmAmigos.setString(1, nome);
-            stmAmigos.setString(2, clave);
+            stmAmigos.setString(2, this.encript(clave));
             rsAmigos = stmAmigos.executeQuery();
             if (rsAmigos.next()) {
                 result = rsAmigos.getString("id_cliente");
@@ -136,7 +136,7 @@ public class DAOServidor extends AbstractDAO {
             con.setAutoCommit(true);
             stmCliente = con.prepareStatement("insert into cliente values(?, ?)");
             stmCliente.setString(1, nome);
-            stmCliente.setString(2, clave);
+            stmCliente.setString(2, this.encript(clave));
             
             stmCliente.executeUpdate();
 
@@ -152,10 +152,13 @@ public class DAOServidor extends AbstractDAO {
         }
     }
     
-    public void novoAmigo(String nome1, String nome2){
+    public void novoAmigo(String nome1, String nome2, String clave){
         Connection con;
         PreparedStatement stmCliente = null;
         ResultSet rsAmigos;
+        
+        if(!this.Autentificación(nome1, clave))
+            return;
         
         con = super.getConexion();
         try {
@@ -234,7 +237,7 @@ public class DAOServidor extends AbstractDAO {
             stmCliente.setString(2, nome2);
 
             stmCliente.executeUpdate();
-            this.novoAmigo(nome1, nome2);
+            this.novoAmigo(nome1, nome2, clave);
             
             con.commit();
 
@@ -328,12 +331,13 @@ public class DAOServidor extends AbstractDAO {
         if(!this.Autentificación(nome, clave))
             return;
         con = super.getConexion();
+        
         try {
             con.setAutoCommit(true);
             stmCliente = con.prepareStatement("update Cliente "
                     + "set clave = ? "
                     + "where id_cliente = ?");
-            stmCliente.setString(1, claveNova);
+            stmCliente.setString(1, this.encript(claveNova));
             stmCliente.setString(2, nome);
 
             stmCliente.executeUpdate();
@@ -359,17 +363,25 @@ public class DAOServidor extends AbstractDAO {
         PreparedStatement stmAmigos = null;
         ResultSet rsAmigos;
         ArrayList<Solicitud> Amigos = new ArrayList();
+        String nomeCliente;
         
         con = super.getConexion();
         try {
             con.setAutoCommit(true);
             stmAmigos = con.prepareStatement("select id_cliente "
                     + "from Cliente "
-                    + "where clave = ? ");
-            stmAmigos.setString(1, clave);
+                    + "where clave = ? "
+                    + "and id_cliente = ?");
+            stmAmigos.setString(1, this.encript(clave));
+            stmAmigos.setString(2, nome);
             rsAmigos = stmAmigos.executeQuery();
             if (rsAmigos.next()) {
-                result = true;
+//                nomeCliente = rsAmigos.getString("id_cliente");
+//                if(nomeCliente.equals(nome)){
+//                    return true;
+//                }
+                System.out.println(rsAmigos.getString("id_cliente"));
+                return true;
             }
 
         } catch (SQLException e) {

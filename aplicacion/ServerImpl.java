@@ -82,7 +82,7 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
                 }
             }
             // mandamos la lista de usuarios conectados al cliente
-            nextClient.getCl().notifyMe(newClientList);
+            nextClient.getCl().notifyMe(obterAmigos(nextClient.getNombre(), "ola"));
             System.out.println(nextClient.getNombre());
             System.out.println(this.obterAmigos(nextClient.getNombre(), "ola"));
 //            
@@ -135,7 +135,7 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
 
     @Override
     public void novoAmigo(String nome1, String nome2, String clave) throws RemoteException {
-        fbd.novoAmigo(nome1, nome2);
+        fbd.novoAmigo(nome1, nome2, clave);
     }
 
     @Override

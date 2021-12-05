@@ -48,9 +48,8 @@ public class FachadaBaseDatos {
                     configuracion.getProperty("baseDatos"),
                     usuario);
             daoServidor = new DAOServidor(conexion);
-            daoServidor.modificarCliente("pablo", "o[M", "ola");
-            daoServidor.modificarCliente("pepe", "o[M", "ola");
-            daoServidor.modificarCliente("lucas", "o[M", "ola");
+//            daoServidor.novoCliente("jose", "ola");
+//            System.out.println(daoServidor.Autentificación("antonio", "ola"));
 
 
         } catch (IOException | java.sql.SQLException e){
@@ -79,8 +78,8 @@ public class FachadaBaseDatos {
         daoServidor.novoCliente(nome, clave);
     }
     
-    public void novoAmigo(String nome1, String nome2){
-        daoServidor.novoAmigo(nome1, nome2);
+    public void novoAmigo(String nome1, String nome2, String clave){
+        daoServidor.novoAmigo(nome1, nome2, clave);
     }
     
     
