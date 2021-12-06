@@ -6,15 +6,21 @@
 
 package baseDatos;
 
+import aplicacion.RSA;
+import aplicacion.ServerImpl;
 import aplicacion.Solicitud;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -48,7 +54,19 @@ public class FachadaBaseDatos {
                     configuracion.getProperty("baseDatos"),
                     usuario);
             daoServidor = new DAOServidor(conexion);
-//            daoServidor.novoCliente("jose", "ola");
+//            RSA rsa = new RSA();
+//            try {
+//                rsa.openFromDiskPublicKey("/tmp/rsa.pub");
+//            } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
+//                Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            String clave = null;
+//            try {
+//                clave = rsa.Encrypt("ola");
+//            } catch (Exception ex) {
+//                Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            daoServidor.novaSolicitude("antonio", "jose", clave);
 //            System.out.println(daoServidor.Autentificación("antonio", "ola"));
 
 
@@ -101,6 +119,9 @@ public class FachadaBaseDatos {
     }
         
     
-    
+    public Boolean existeCliente(String nome){
+        return daoServidor.existeCliente(nome);
+    }
+
     
 }

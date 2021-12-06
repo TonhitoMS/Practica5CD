@@ -13,6 +13,8 @@ import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.net.*;
 import java.io.*;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
@@ -20,6 +22,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * This class represents the object server for a distributed
@@ -30,12 +35,28 @@ import java.util.logging.Logger;
 
 public class Servidor  {
     
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
         
         InputStreamReader is = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(is);
         
         String portNum, registryURL;
+        
+        //cifrado RSA
+        RSA rsa = new RSA();
+        
+        //Generamos un par de claves
+        //Admite claves de 512, 1024, 2048 y 4096 bits
+        rsa.genKeyPair(512);
+        
+        
+        String file_private = "/tmp/rsa.pri";
+        String file_public = "/tmp/rsa.pub";
+        
+        //Las guardamos asi podemos usarlas despues
+        //a lo largo del tiempo
+        rsa.saveToDiskPrivateKey("/tmp/rsa.pri");
+        rsa.saveToDiskPublicKey("/tmp/rsa.pub");
                 
         try{     
             System.out.println("Enter the RMIregistry port number:");

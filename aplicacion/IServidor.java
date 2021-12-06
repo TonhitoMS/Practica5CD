@@ -58,4 +58,10 @@ public interface IServidor extends Remote{
     
     public void actualizarListaAmigos()
             throws java.rmi.RemoteException;
+    
+    public RSA obterClave() 
+            throws java.rmi.RemoteException;
+    
+    public Boolean existeCliente(String nome)
+            throws java.rmi.RemoteException;
 }

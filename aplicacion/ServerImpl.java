@@ -7,8 +7,11 @@
 package aplicacion;
 
 import baseDatos.FachadaBaseDatos;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -163,5 +166,22 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     public void modificarCliente(String nome, String clave, String claveNova) throws RemoteException{
         fbd.modificarCliente(nome, clave, claveNova);
     }
+
+    @Override
+    public RSA obterClave() throws RemoteException {
+        RSA rsa = new RSA();
+        try {
+            rsa.openFromDiskPublicKey("/tmp/rsa.pub");
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rsa;
+    }
     
-}
+
+    @Override
+    public Boolean existeCliente(String nome) throws RemoteException {
+        return fbd.existeCliente(nome);    
+    
+    }
+    }
