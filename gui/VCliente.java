@@ -55,9 +55,8 @@ public class VCliente extends javax.swing.JFrame {
     private IServidor h;
     private ICliente IC;
     
-    private String hostName;
-    private String portNum;
     private String username;
+    private String password;
     
     private ArrayList<Peer> listaUsuarios;
     private ArrayList<Amigo> amigos;
@@ -70,16 +69,15 @@ public class VCliente extends javax.swing.JFrame {
     
     /**
      * Creates new form VCliente
-     * @param fa
-     * @param hostName
-     * @param portNum
+     * @param password
+     * @param h
      * @param username
      */
-    public VCliente(aplicacion.FachadaAplicacion fa, String hostName, String portNum, String username) {
-        this.fa=fa;
-        this.hostName = hostName;
-        this.portNum = portNum;
+    public VCliente(String username, String password, IServidor h) {
+
         this.username = username;
+        this.password = password;
+        this.h = h;
         
         this.amigos = new ArrayList<>();
         this.amigosEnLinea = new ArrayList<>();
@@ -160,7 +158,7 @@ public class VCliente extends javax.swing.JFrame {
                 }
             }
         });
-        
+
         // Iniciamos el cliente
         startClient();
     }
@@ -181,12 +179,6 @@ public class VCliente extends javax.swing.JFrame {
     private void startClient(){
         
         try {
-            String registryURL = "rmi://" +this.hostName+ ":" + this.portNum + "/callback";
-            
-            this.h = (IServidor)Naming.lookup(registryURL);
-            
-            System.out.println("Lookup completed " );
-            
             //Código para rexistrar o peer no servidor nas probas iniciais
             this.IC = new ClienteImpl(this);
             this.peer = new Peer(username, IC);
@@ -299,6 +291,7 @@ public class VCliente extends javax.swing.JFrame {
         textoHola.setFont(textoHola.getFont().deriveFont(textoHola.getFont().getStyle() & ~java.awt.Font.BOLD, textoHola.getFont().getSize()+14));
         textoHola.setText("Hola, ");
 
+        panelMensajes.setEditable(false);
         panelMensajes.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
@@ -399,7 +392,7 @@ public class VCliente extends javax.swing.JFrame {
 
     private void btnVerSolicitudesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerSolicitudesActionPerformed
         // TODO add your handling code here:
-        VSolicitudes solicitudes = new VSolicitudes();
+        VSolicitudes solicitudes = new VSolicitudes(this.username, this.password, this.h, this);
     }//GEN-LAST:event_btnVerSolicitudesActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -415,7 +408,20 @@ public class VCliente extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        String input = JOptionPane.showInputDialog(null, "Introduzca el nombre del usuario: ");
+        String nombreAmigo = JOptionPane.showInputDialog(null, "Introduzca el nombre del usuario: ");
+        
+        // necesitamos una funcion
+        // para comprobar si el amigo que queremos
+        // añadir existe
+        if(nombreAmigo != null){
+            try {
+                //this.h.novoAmigo(this.username, nombreAmigo, this.password);
+                this.h.novaSolicitude(this.username, nombreAmigo, this.password);
+                
+            } catch (RemoteException ex) {
+                Logger.getLogger(VCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void TablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaUsuariosMouseClicked

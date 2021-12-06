@@ -5,6 +5,8 @@
  */
 package gui;
 
+import aplicacion.IServidor;
+import java.rmi.Naming;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,12 +14,29 @@ import javax.swing.JOptionPane;
  * @author Pablo Lago Poza
  */
 public class VConexion extends javax.swing.JFrame {
-
+    
+    private IServidor h;
     /**
      * Creates new form VConexion
      */
     public VConexion() {
         initComponents();
+        
+        textoRellenar.setVisible(false);
+        textoUsuarioConectado.setVisible(false);
+        
+        try{
+            String registryURL = "rmi://" +textoHost.getText()+ ":" + textoPuerto.getText() + "/callback";
+
+            this.h = (IServidor)Naming.lookup(registryURL);
+
+            System.out.println("Lookup completed " );
+            
+        } catch(Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Hubo un problema al conectarse al servidor.");
+            System.exit(0);
+        }
         
         setLocationRelativeTo(null); // Localizar o JFRame no centro da pantalla
         this.setTitle("Conexión con el servidor");
@@ -44,6 +63,8 @@ public class VConexion extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         textoPassword = new javax.swing.JPasswordField();
         btnRegistrar = new javax.swing.JButton();
+        textoRellenar = new javax.swing.JLabel();
+        textoUsuarioConectado = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,11 +75,13 @@ public class VConexion extends javax.swing.JFrame {
         jLabel2.setText("Nombre del Host");
 
         textoHost.setFont(textoHost.getFont().deriveFont(textoHost.getFont().getSize()+2f));
+        textoHost.setText("localhost");
 
         jLabel3.setFont(jLabel3.getFont().deriveFont(jLabel3.getFont().getSize()+2f));
         jLabel3.setText("Número de puerto");
 
         textoPuerto.setFont(textoPuerto.getFont().deriveFont(textoPuerto.getFont().getSize()+2f));
+        textoPuerto.setText("1099");
 
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -98,6 +121,14 @@ public class VConexion extends javax.swing.JFrame {
             }
         });
 
+        textoRellenar.setFont(textoRellenar.getFont().deriveFont((float)12));
+        textoRellenar.setForeground(new java.awt.Color(255, 0, 0));
+        textoRellenar.setText("Rellena todos los campos.");
+
+        textoUsuarioConectado.setFont(textoUsuarioConectado.getFont().deriveFont((float)12));
+        textoUsuarioConectado.setForeground(new java.awt.Color(255, 0, 0));
+        textoUsuarioConectado.setText("El usuario no está registrado");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,7 +140,7 @@ public class VConexion extends javax.swing.JFrame {
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnRegistrar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(btnAceptar))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -123,15 +154,18 @@ public class VConexion extends javax.swing.JFrame {
                             .addComponent(textoPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel4))
-                        .addGap(3, 3, 3)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                            .addComponent(jLabel4)
+                            .addComponent(textoRellenar)
+                            .addComponent(textoUsuarioConectado))))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(textoRellenar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -144,16 +178,18 @@ public class VConexion extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textoPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(38, 38, 38)
+                .addGap(18, 18, 18)
+                .addComponent(textoUsuarioConectado)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRegistrar)
                     .addComponent(btnAceptar)
-                    .addComponent(btnSalir)
-                    .addComponent(btnRegistrar))
-                .addGap(13, 13, 13))
+                    .addComponent(btnSalir))
+                .addGap(20, 20, 20))
         );
 
         pack();
@@ -161,14 +197,41 @@ public class VConexion extends javax.swing.JFrame {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
+        
         System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
         if(!textoHost.getText().isEmpty() && !textoPuerto.getText().isEmpty()){
-            this.dispose();
-            VCliente cliente = new VCliente(null, textoHost.getText(), textoPuerto.getText(), textoNombre.getText());    
+            try{                
+                if(!textoNombre.getText().isEmpty() && !String.valueOf(textoPassword.getPassword()).isEmpty()){
+                    
+                    String aceptar = this.h.iniciarSesion(textoNombre.getText(), String.valueOf(textoPassword.getPassword()));
+                    
+                    if(aceptar != null && aceptar.equals(textoNombre.getText())){
+                    
+                        VCliente cliente = new VCliente(textoNombre.getText(), String.valueOf(textoPassword.getPassword()), this.h);
+
+                        textoRellenar.setVisible(false);
+
+                        this.dispose();
+                    }
+                    else{
+                        textoRellenar.setVisible(false);
+                        textoUsuarioConectado.setVisible(true);
+                    }
+                }
+                else{
+                    textoRellenar.setVisible(true);
+                    textoUsuarioConectado.setVisible(false);
+                }
+                
+            } catch(Exception e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Hubo un problema al conectarse al servidor.");
+                System.exit(0);
+            }
         }
         else{
             nuevoAviso("Introduzca todos los datos antes de continuar");
@@ -181,7 +244,7 @@ public class VConexion extends javax.swing.JFrame {
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
-        VRegistro registro = new VRegistro();
+        VRegistro registro = new VRegistro(this.h);
     }//GEN-LAST:event_btnRegistrarActionPerformed
     
     
@@ -237,5 +300,7 @@ public class VConexion extends javax.swing.JFrame {
     private javax.swing.JTextField textoNombre;
     private javax.swing.JPasswordField textoPassword;
     private javax.swing.JTextField textoPuerto;
+    private javax.swing.JLabel textoRellenar;
+    private javax.swing.JLabel textoUsuarioConectado;
     // End of variables declaration//GEN-END:variables
 }

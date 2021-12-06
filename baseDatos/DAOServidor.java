@@ -108,7 +108,7 @@ public class DAOServidor extends AbstractDAO {
             stmAmigos.setString(1, nome);
             rsAmigos = stmAmigos.executeQuery();
             while (rsAmigos.next()) {
-                Amigos.add(new Solicitud(rsAmigos.getString("id_cliente1"), rsAmigos.getString("id_cliente1"), 
+                Amigos.add(new Solicitud(rsAmigos.getString("id_cliente1"), rsAmigos.getString("id_cliente2"), 
                 rsAmigos.getDate("fecha")));
             }
 
@@ -235,6 +235,7 @@ public class DAOServidor extends AbstractDAO {
                     + "and id_cliente1 = ?");
             stmCliente.setString(1, nome1);
             stmCliente.setString(2, nome2);
+            System.out.println(stmCliente);
 
             stmCliente.executeUpdate();
             this.novoAmigo(nome1, nome2, clave);
@@ -273,8 +274,8 @@ public class DAOServidor extends AbstractDAO {
         try {
             con.setAutoCommit(true);
             stmCliente = con.prepareStatement("delete from Solicitude "
-                    + "where id_cliente1 = ? "
-                    + "and id_cliente2 = ?");
+                    + "where id_cliente2 = ? "
+                    + "and id_cliente1 = ?");
             stmCliente.setString(1, nome1);
             stmCliente.setString(2, nome2);
 

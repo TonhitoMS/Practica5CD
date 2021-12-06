@@ -55,4 +55,7 @@ public interface IServidor extends Remote{
     
     public void modificarCliente(String nome, String clave, String claveNova)
             throws java.rmi.RemoteException;
+    
+    public void actualizarListaAmigos()
+            throws java.rmi.RemoteException;
 }

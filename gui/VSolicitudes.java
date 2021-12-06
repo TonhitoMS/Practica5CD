@@ -5,9 +5,13 @@
  */
 package gui;
 
+import aplicacion.IServidor;
+import aplicacion.Peer;
+import aplicacion.Solicitud;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -18,16 +22,33 @@ import javax.swing.JOptionPane;
  * @author Pablo Lago Poza
  */
 public class VSolicitudes extends javax.swing.JFrame {
-
+    
+    private String username;
+    private String password;
+    private IServidor h;
+    private VCliente c;
     /**
      * Creates new form VSolicitudes
      */
-    public VSolicitudes() {
+    public VSolicitudes(String username, String password, IServidor h, VCliente c) {
+        
+        this.username = username;
+        this.password = password;
+        this.h = h;
+        this.c = c;
+        
         this.setVisible(true);
         
         setLocationRelativeTo(null);  // localizar el JFRame en el centro de la pantalla
         
         initComponents();
+        
+        try {
+            actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, this.password));
+            
+        } catch (RemoteException ex) {
+            Logger.getLogger(VSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         // Confirmacion por si cerramos la ventana
         this.addWindowListener(new WindowAdapter() {
@@ -36,7 +57,15 @@ public class VSolicitudes extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    
+    private void actualizarTablaSolicitudes(ArrayList<Solicitud> solicitudes){
+        ModeloTablaSolicitudes m = new ModeloTablaSolicitudes();
+        
+        tablaSolicitudes.setModel(m);
+        
+        m.setFilas(solicitudes);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,7 +79,7 @@ public class VSolicitudes extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         btnSalir = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tablaSolicitudes = new javax.swing.JTable();
         btnAceptar = new javax.swing.JButton();
         btnRechazar = new javax.swing.JButton();
 
@@ -76,8 +105,8 @@ public class VSolicitudes extends javax.swing.JFrame {
             }
         });
 
-        jTable2.setModel(new ModeloTablaSolicitudes());
-        jScrollPane2.setViewportView(jTable2);
+        tablaSolicitudes.setModel(new ModeloTablaSolicitudes());
+        jScrollPane2.setViewportView(tablaSolicitudes);
 
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -87,6 +116,11 @@ public class VSolicitudes extends javax.swing.JFrame {
         });
 
         btnRechazar.setText("Rechazar");
+        btnRechazar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRechazarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -127,9 +161,59 @@ public class VSolicitudes extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
-
+        if(tablaSolicitudes.getSelectedRow() != -1){
+                
+            int row = tablaSolicitudes.getSelectedRow();
+            
+            try {
+                System.out.println((String)tablaSolicitudes.getValueAt(row, 0));
+                System.out.println((String)tablaSolicitudes.getValueAt(row, 1));
+                this.h.aceptaSolicitude(this.username, (String)tablaSolicitudes.getValueAt(row, 0), this.password);
+                
+                actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, this.password));
+                
+                this.h.actualizarListaAmigos();
+                
+            } catch (RemoteException ex) {
+                Logger.getLogger(VSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una solicitud.");
+        }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
+    private void btnRechazarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRechazarActionPerformed
+        // TODO add your handling code here:
+        if(tablaSolicitudes.getSelectedRow() != -1){
+                
+            int row = tablaSolicitudes.getSelectedRow();
+            
+            try {
+                this.h.borrarSolicitude(this.username, (String)tablaSolicitudes.getValueAt(row, 0), this.password);
+                
+                actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, this.password));
+                
+            } catch (RemoteException ex) {
+                Logger.getLogger(VSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una solicitud.");
+        }
+    }//GEN-LAST:event_btnRechazarActionPerformed
+    
+    
+    private void actualizarTablaUsuarios(ArrayList<Peer> usuarios){
+        ModeloTablaUsuarios m = new ModeloTablaUsuarios();
+        
+        c.getTablaUsuarios().setModel(m);
+
+        m.setFilas(usuarios);
+            
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
@@ -138,6 +222,6 @@ public class VSolicitudes extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable tablaSolicitudes;
     // End of variables declaration//GEN-END:variables
 }

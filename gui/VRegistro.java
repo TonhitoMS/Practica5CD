@@ -5,8 +5,12 @@
  */
 package gui;
 
+import aplicacion.IServidor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -14,18 +18,23 @@ import javax.swing.JFrame;
  * @author Sammy Guergachi <sguergachi at gmail.com>
  */
 public class VRegistro extends javax.swing.JFrame {
-
+    
+    private IServidor h;
     /**
      * Creates new form VRegistro
      */
-    public VRegistro() {
+    public VRegistro(IServidor h) {
+        
+        this.h = h;
+        
         this.setVisible(true);
         
         setLocationRelativeTo(null);  // localizar el JFRame en el centro de la pantalla
 
         initComponents();
         
-        textoNoCoinciden.setVisible(true);
+        textoNoCoinciden.setVisible(false);
+        textoRellenar.setVisible(false);
         
         // Confirmacion por si cerramos la ventana
         this.addWindowListener(new WindowAdapter() {
@@ -54,11 +63,12 @@ public class VRegistro extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         textoNoCoinciden = new javax.swing.JLabel();
+        textoRellenar = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(jLabel1.getFont().deriveFont(jLabel1.getFont().getStyle() & ~java.awt.Font.BOLD, jLabel1.getFont().getSize()+24));
-        jLabel1.setText("Registro de usuario");
+        jLabel1.setText("Registro");
 
         jLabel4.setFont(jLabel4.getFont().deriveFont(jLabel4.getFont().getSize()+2f));
         jLabel4.setText("Nombre");
@@ -101,6 +111,10 @@ public class VRegistro extends javax.swing.JFrame {
         textoNoCoinciden.setForeground(new java.awt.Color(255, 0, 0));
         textoNoCoinciden.setText("Las contraseñas no coinciden");
 
+        textoRellenar.setFont(textoRellenar.getFont().deriveFont((float)12));
+        textoRellenar.setForeground(new java.awt.Color(255, 0, 0));
+        textoRellenar.setText("Rellena todos los campos.");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -110,17 +124,17 @@ public class VRegistro extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(textoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel6))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(textoPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textoNoCoinciden, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                            .addComponent(textoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel1))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textoRellenar)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5)
+                                .addComponent(textoPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textoNoCoinciden, javax.swing.GroupLayout.Alignment.TRAILING))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addComponent(textoPassword2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -135,7 +149,9 @@ public class VRegistro extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(textoRellenar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -164,13 +180,37 @@ public class VRegistro extends javax.swing.JFrame {
     }//GEN-LAST:event_textoNombreActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        // TODO add your handling code here:
-        // añadir un nuevo usuario
-        // a la base de datos, y volvemos a la ventana de registro
-        this.dispose();
+        try {
+            // TODO add your handling code here:
+            // añadir un nuevo usuario
+            // a la base de datos, y volvemos a la ventana de registro
+            if(!textoNombre.getText().isEmpty() && !String.valueOf(textoPassword1.getPassword()).isEmpty() && !String.valueOf(textoPassword2.getPassword()).isEmpty()){
+                
+                if(coincidirPasswords(String.valueOf(textoPassword1.getPassword()), String.valueOf(textoPassword2.getPassword()))){
+                    this.h.novoCliente(textoNombre.getText(), String.valueOf(textoPassword1.getPassword()));
+                
+                    this.dispose();
+                }
+                else{
+                    textoNoCoinciden.setVisible(true);
+                    textoRellenar.setVisible(false);
+                }
+            }
+            else{
+                textoRellenar.setVisible(true);
+                textoNoCoinciden.setVisible(false);
+            }
+            
+        } catch (RemoteException ex) {
+            Logger.getLogger(VRegistro.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }//GEN-LAST:event_btnAceptarActionPerformed
-
+    
+    private boolean coincidirPasswords(String pass1, String pass2){
+        return pass1.equals(pass2);
+    }
+    
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -188,5 +228,6 @@ public class VRegistro extends javax.swing.JFrame {
     private javax.swing.JTextField textoNombre;
     private javax.swing.JPasswordField textoPassword1;
     private javax.swing.JPasswordField textoPassword2;
+    private javax.swing.JLabel textoRellenar;
     // End of variables declaration//GEN-END:variables
 }

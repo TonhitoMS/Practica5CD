@@ -6,13 +6,14 @@
 
 package aplicacion;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * 
  * @author pablo
  */
-public class Solicitud {
+public class Solicitud implements Serializable{
     
     private String usuario1;
     private String usuario2;

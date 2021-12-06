@@ -10,6 +10,8 @@ import baseDatos.FachadaBaseDatos;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -60,6 +62,11 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
             System.out.println("unregister: clientwasn't registered.");
         }
     } 
+    
+    @Override
+    public void actualizarListaAmigos() throws java.rmi.RemoteException{
+        doCallbacks();
+    }
     
     // funcion para realizar las callbacks
     private synchronized void doCallbacks() throws java.rmi.RemoteException{

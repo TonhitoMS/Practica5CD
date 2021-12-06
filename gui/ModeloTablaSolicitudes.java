@@ -24,7 +24,7 @@ public class ModeloTablaSolicitudes extends AbstractTableModel{
     }
     
     public int getColumnCount (){
-        return 3;
+        return 2;
     }
 
     public int getRowCount(){
@@ -37,9 +37,8 @@ public class ModeloTablaSolicitudes extends AbstractTableModel{
         String nombre="";
 
         switch (col){
-            case 0: nombre= "Usuario1"; break;
-            case 1: nombre= "Usuario2"; break;
-            case 2: nombre= "Fecha"; break;
+            case 0: nombre= "Usuario"; break;
+            case 1: nombre= "Fecha"; break;
         }
         return nombre;
     }
@@ -51,7 +50,6 @@ public class ModeloTablaSolicitudes extends AbstractTableModel{
         switch (col){
             case 0: clase= java.lang.String.class; break;
             case 1: clase= java.lang.String.class; break;
-            case 2: clase= java.lang.String.class; break;
         }
         return clase;
     }
@@ -66,8 +64,7 @@ public class ModeloTablaSolicitudes extends AbstractTableModel{
 
         switch (col){
             case 0: resultado= this.solicitudes.get(row).getUsuario1(); break;
-            case 1: resultado= this.solicitudes.get(row).getUsuario2(); break;
-            case 2: resultado= this.solicitudes.get(row).getFecha().toString(); break;
+            case 1: resultado= this.solicitudes.get(row).getFecha().toString(); break;
         }
         return resultado;
     } 
