@@ -86,15 +86,15 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
             // creamos la lista para enviar al cliente, quitandole a el mismo de la lista
             ArrayList<Peer> newClientList = new ArrayList<>();
             
-            for (Peer p : clientList){
-                if(!p.equals(nextClient)){
-                    newClientList.add(p);
-                }
-            }
+//            for (Peer p : clientList){
+//                if(!p.equals(nextClient)){
+//                    newClientList.add(p);
+//                }
+//            }
             // mandamos la lista de usuarios conectados al cliente
             nextClient.getCl().notifyMe(obterAmigos(nextClient.getNombre()));
-            System.out.println(nextClient.getNombre());
-            System.out.println(this.obterAmigos(nextClient.getNombre()));
+            //System.out.println(nextClient.getNombre());
+            //System.out.println(this.obterAmigos(nextClient.getNombre()));
 //            
         }// end for
         System.out.println("********************************\n" +
@@ -116,8 +116,9 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
             }
         }
         
-        System.out.println(newClientList);
-        System.out.println(amigos);
+        System.out.println("Nome do usuario: " + nome);
+        System.out.println("Usuario conectados: " + newClientList);
+        System.out.println("Lista de amigos: " + amigos);
         
         for(String s: amigos){
             for(Peer p: newClientList){
@@ -125,6 +126,8 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
                     result.add(p);
             }
         }
+        
+        System.out.println("Resultado: " + result);
         return result;
     }
 
@@ -188,7 +191,12 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     public Boolean comprobarAmigos(String nome1, String nome2, String clave) throws RemoteException {
         return fbd.comprobarAmigos(nome1, nome2, clave);
     }
-
+    
+    
+    @Override
+    public Boolean existeSolicitude(String nome1, String nome2){
+        return fbd.existeSolicitude(nome1, nome2);
+    }
     
     
     private void actualizarSolicitudes() throws RemoteException {

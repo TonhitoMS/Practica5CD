@@ -38,7 +38,7 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
     }
     
     @Override
-    public void message(String s, Peer user) throws RemoteException {
+    public synchronized void message(String s, Peer user) throws RemoteException {
         try{
             
             for(Amigo amigo : c.getAmigos()){
@@ -57,13 +57,15 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
                 }
             }
             
+            //System.out.println(c.getAmigos());
+            
         } catch(Exception e){
             System.out.println("Excepction: " +e);
         }
     }
     
     @Override
-    public void nuevoMensaje(Peer user){
+    public synchronized void nuevoMensaje(Peer user){
         
         Amigo amigo1 = null;
         
@@ -86,30 +88,20 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
     }
     
     @Override
-    public void notifyMe(ArrayList<Peer> usuarios){
+    public synchronized void notifyMe(ArrayList<Peer> usuarios){
         
         this.usuarios = usuarios;
-        System.out.println(usuarios);
+        //System.out.println(usuarios);
         //c.setUsuarios(usuarios);  // Pasamos la lista al cliente
         
         // Actualizamos la tabla de los usuarios
-        actualizarTablaUsuarios(usuarios);
         
-        c.setListaUsuarios(usuarios);
+        ArrayList<Amigo> amigos = c.setListaUsuarios(usuarios);
+        
+        actualizarTablaUsuarios(amigos);
     } 
     
-    public Peer getPeer(String nome){
-        Peer result = null;
-        
-        for(Peer p: this.usuarios){
-            if(p.getNombre().equals(nome))
-                return p;
-        }
-        
-        return result;
-    }
-    
-    private void actualizarTablaUsuarios(ArrayList<Peer> usuarios){
+    private void actualizarTablaUsuarios(ArrayList<Amigo> usuarios){
         ModeloTablaUsuarios m = new ModeloTablaUsuarios();
         
         c.getTablaUsuarios().setModel(m);

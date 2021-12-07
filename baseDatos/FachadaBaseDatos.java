@@ -132,4 +132,8 @@ public class FachadaBaseDatos {
         return daoServidor.haiSolicitudes(nome);
     }
     
+    public Boolean existeSolicitude(String nome1, String nome2){
+        return daoServidor.existeSolicitude(nome1, nome2);
+    }
+    
 }

@@ -607,6 +607,39 @@ public class DAOServidor extends AbstractDAO {
         }
         return result;
     }
+    
+    public Boolean existeSolicitude(String nome1, String nome2){
+       Boolean result = false;
+       Connection con;
+        PreparedStatement stmAmigos = null;
+        ResultSet rsAmigos;
+       
+       con = super.getConexion();
+        try {
+            con.setAutoCommit(true);
+            stmAmigos = con.prepareStatement("select id_cliente1, id_cliente2, fecha "
+                    + "from Solicitude "
+                    + "where id_cliente1 = ? "
+                    + "and id_cliente2 = ?");
+            stmAmigos.setString(1, nome1);
+            stmAmigos.setString(2, nome2);
+            rsAmigos = stmAmigos.executeQuery();
+            if (rsAmigos.next()) {
+                result = true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+//            this.getFachadaAplicacion().muestraExcepcion(e.getMessage());
+        } finally {
+            try {
+                stmAmigos.close();
+            } catch (SQLException e) {
+                System.out.println("Imposible cerrar cursores");
+            }
+        }
+        return result;
+    }
 }
 
 

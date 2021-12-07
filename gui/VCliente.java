@@ -63,8 +63,6 @@ public class VCliente extends javax.swing.JFrame {
     
     private ArrayList<Peer> listaUsuarios;
     private ArrayList<Amigo> amigos;
-    private ArrayList<Amigo> amigosEnLinea;
-    private ArrayList<String> amigosNuevoMensaje;
     
     private Peer peer;
     private Peer peerActual;
@@ -90,8 +88,6 @@ public class VCliente extends javax.swing.JFrame {
         }
         
         this.amigos = new ArrayList<>();
-        this.amigosEnLinea = new ArrayList<>();
-        this.amigosNuevoMensaje = new ArrayList<>();
         
         this.setVisible(true);
         
@@ -218,29 +214,45 @@ public class VCliente extends javax.swing.JFrame {
     }
 
 
-    public void setListaUsuarios(ArrayList<Peer> listaUsuarios) {
+    public ArrayList<Amigo> setListaUsuarios(ArrayList<Peer> listaUsuarios) {
         this.listaUsuarios = listaUsuarios;
+        System.out.println("Lo que manda el server: " +listaUsuarios);
         // añadimos los peer a la lista de amigos
         
-        ArrayList<Amigo> añadir = new ArrayList<>();
+        ArrayList<Amigo> amigosPeer = new ArrayList<>();
+        ArrayList<Amigo> eliminar = new ArrayList<>();
+        
         
         for(Peer peer : this.listaUsuarios){
             
-            if(this.amigos.isEmpty()){
-                this.amigos.add(new Amigo(peer));
-            }
-            else{
-                for(Amigo amigo : this.amigos){
-
-                    if(!amigo.getAmigo().equals(peer)){
-                        añadir.add(new Amigo(peer));
-                    }
-                }
+            amigosPeer.add(new Amigo(peer));
+        }
+        //this.amigos.clear();
+        if(listaUsuarios.size() > this.amigos.size()){
+            for(Peer peer : this.listaUsuarios){
+            
+                Amigo temp = new Amigo(peer);
                 
-                this.amigos.addAll(añadir);
+                if(!this.amigos.contains(temp)){
+                    this.amigos.add(temp);
+                }
             }
         }
+        else if(listaUsuarios.size() < this.amigos.size()){
+            for(Amigo amigo1 : this.amigos){
+                if(!amigosPeer.contains(amigo1)){
+                    eliminar.add(amigo1);
+                }
+            }     
+        }
+           
+        this.amigos.removeAll(eliminar); 
+         
+        System.out.println("lista de amigos: "+this.amigos);
+        
+        return this.amigos;
     }
+    
     
     // funcion para enviar un mensaje a otro peer
     private void enviarMensaje(){
@@ -253,23 +265,29 @@ public class VCliente extends javax.swing.JFrame {
                 
                 String mensaje = textoEnviar.getText();
                 
-                StringBuilder nuevoMensaje = new StringBuilder(mensaje);
-
-                int i = 0;
-                while ((i = nuevoMensaje.indexOf(" ", i + 35)) != -1) {
-                    nuevoMensaje.replace(i, i + 1, "\n");
+                if(mensaje.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "El mensaje está vacío.");
                 }
+                else{
                 
-                
-                amigoActual.getAmigo().getCl().message(nuevoMensaje.toString(), peer);
-                amigoActual.getAmigo().getCl().nuevoMensaje(peer);  // notificamos a nuestro amigo de que recibio un nuevo mensaje
-                amigoActual.getMensajes().add(new ArrayList<>(Arrays.asList(nuevoMensaje.toString(), "derecha")));  // añadimos el mensaje al array de mensajes
-                imprimirMensaje("derecha", nuevoMensaje.toString());
-                
-                amigoActual.getHoras().add(new ArrayList<>(Arrays.asList(obtenerHora(), "derecha")));
-                imprimirHora("derecha", obtenerHora());
-                
-                textoEnviar.setText("");
+                    StringBuilder nuevoMensaje = new StringBuilder(mensaje);
+
+                    int i = 0;
+                    while ((i = nuevoMensaje.indexOf(" ", i + 35)) != -1) {
+                        nuevoMensaje.replace(i, i + 1, "\n");
+                    }
+
+
+                    amigoActual.getAmigo().getCl().message(nuevoMensaje.toString(), peer);
+                    amigoActual.getAmigo().getCl().nuevoMensaje(peer);  // notificamos a nuestro amigo de que recibio un nuevo mensaje
+                    amigoActual.getMensajes().add(new ArrayList<>(Arrays.asList(nuevoMensaje.toString(), "derecha")));  // añadimos el mensaje al array de mensajes
+                    imprimirMensaje("derecha", nuevoMensaje.toString());
+
+                    amigoActual.getHoras().add(new ArrayList<>(Arrays.asList(obtenerHora(), "derecha")));
+                    imprimirHora("derecha", obtenerHora());
+
+                    textoEnviar.setText("");
+                }
                 
             }
             else{
@@ -447,7 +465,7 @@ public class VCliente extends javax.swing.JFrame {
         String nombreAmigo = JOptionPane.showInputDialog(null, "Introduzca el nombre del usuario: ");
         
         try{
-            if(nombreAmigo != null && !this.h.comprobarAmigos(this.username, nombreAmigo, rsa.Encrypt(this.password)) && this.h.existeCliente(nombreAmigo)){
+            if(nombreAmigo != null && !this.h.comprobarAmigos(this.username, nombreAmigo, rsa.Encrypt(this.password)) && this.h.existeCliente(nombreAmigo) && !this.h.existeSolicitude(this.username, nombreAmigo) && !this.h.existeSolicitude(nombreAmigo, this.username)){
                 //this.h.novoAmigo(this.username, nombreAmigo, this.password);
                 if(!nombreAmigo.equals(this.username)){
                     this.h.novaSolicitude(this.username, nombreAmigo, rsa.Encrypt(this.password));
@@ -459,6 +477,12 @@ public class VCliente extends javax.swing.JFrame {
             else if(!this.h.existeCliente(nombreAmigo) && nombreAmigo != null){
                 System.out.println(this.h.existeCliente(nombreAmigo));
                 nuevoAviso("El usuario introducido no existe.");
+            }
+            else if(this.h.existeSolicitude(this.username, nombreAmigo)){
+                nuevoAviso("El usuario todavía tiene tu solicitud pendiente.");
+            }
+            else if(this.h.existeSolicitude(nombreAmigo, this.username)){
+                nuevoAviso("Ya tienes una solicitud pendiente de ese usuario.");
             }
             else if(nombreAmigo != null){
                 nuevoAviso("Ya eres amigo de ese usuario.");
@@ -564,10 +588,6 @@ public class VCliente extends javax.swing.JFrame {
     public ArrayList<Amigo> getAmigos() {
         return amigos;
     }
-
-    public ArrayList<Amigo> getAmigosEnLinea() {
-        return amigosEnLinea;
-    }
     
     
     public JTable getTablaUsuarios() {
@@ -578,9 +598,6 @@ public class VCliente extends javax.swing.JFrame {
         return panelMensajes;
     }
 
-    public ArrayList<String> getAmigosNuevoMensaje() {
-        return amigosNuevoMensaje;
-    }
 
     public JLabel getTxtNuevaSolicitud() {
         return txtNuevaSolicitud;

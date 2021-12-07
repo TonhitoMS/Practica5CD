@@ -215,16 +215,7 @@ public class VSolicitudes extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una solicitud.");
         }
     }//GEN-LAST:event_btnRechazarActionPerformed
-    
-    
-    private void actualizarTablaUsuarios(ArrayList<Peer> usuarios){
-        ModeloTablaUsuarios m = new ModeloTablaUsuarios();
-        
-        c.getTablaUsuarios().setModel(m);
 
-        m.setFilas(usuarios);
-            
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;

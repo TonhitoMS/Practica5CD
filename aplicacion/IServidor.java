@@ -66,6 +66,6 @@ public interface IServidor extends Remote{
     public Boolean comprobarAmigos(String nome1, String nome2, String clave)
                 throws RemoteException;
     
-    
-
+    public Boolean existeSolicitude(String nome1, String nome2)
+                throws RemoteException;
 }

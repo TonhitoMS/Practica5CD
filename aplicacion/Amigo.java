@@ -7,6 +7,7 @@
 package aplicacion;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * 
@@ -57,6 +58,27 @@ public class Amigo {
     public void setNuevoMensaje(boolean nuevoMensaje) {
         this.nuevoMensaje = nuevoMensaje;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Amigo other = (Amigo) obj;
+        if (!Objects.equals(this.amigo, other.amigo)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     
     
 

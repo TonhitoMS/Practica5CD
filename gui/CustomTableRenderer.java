@@ -34,13 +34,13 @@ public class CustomTableRenderer extends DefaultTableCellRenderer{
         ModeloTablaUsuarios model = (ModeloTablaUsuarios) table.getModel();
         String nombre = model.obtenerNombre(row);
         
-        if(!this.nombres.get(row).equals(nombre) && this.nombres.get(row).isNuevoMensaje()){
+        if(this.nombres.get(row).isNuevoMensaje()){
             c.setForeground(Color.GREEN);
         }
         else{
             c.setForeground(Color.BLACK);
         }
-        
+
         return c;
     }
 }

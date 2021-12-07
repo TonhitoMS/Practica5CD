@@ -6,6 +6,7 @@
 
 package gui;
 
+import aplicacion.Amigo;
 import aplicacion.Peer;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
 import javax.swing.table.*;
 
 public class ModeloTablaUsuarios extends AbstractTableModel{
-    private ArrayList<Peer> usuarios;
+    private ArrayList<Amigo> usuarios;
 
 
     public ModeloTablaUsuarios(){
@@ -60,18 +61,18 @@ public class ModeloTablaUsuarios extends AbstractTableModel{
         Object resultado=null;
 
         switch (col){
-            case 0: resultado= this.usuarios.get(row).getNombre(); break;
+            case 0: resultado= this.usuarios.get(row).getAmigo().getNombre(); break;
         }
         return resultado;
     } 
 
-    public void setFilas(ArrayList<Peer> usuarios){
+    public void setFilas(ArrayList<Amigo> usuarios){
         this.usuarios = usuarios;
         fireTableDataChanged();
     }
 
     public String obtenerNombre(int i){
-        return this.usuarios.get(i).getNombre();
+        return this.usuarios.get(i).getAmigo().getNombre();
     }
 
 }
