@@ -37,7 +37,15 @@ public class VCambioContra extends javax.swing.JFrame {
             Logger.getLogger(VRegistro.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        this.setVisible(true);
+        
+        setLocationRelativeTo(null);  // localizar el JFRame en el centro de la pantalla
+        
         initComponents();
+        
+        textoRellenar.setVisible(false);
+        textoNoCoinciden.setVisible(false);
+        textoContraActual.setVisible(false);
     }
 
     /**
@@ -50,19 +58,18 @@ public class VCambioContra extends javax.swing.JFrame {
     private void initComponents() {
 
         btnSalir = new javax.swing.JButton();
-        textoRellenar = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         textoPassword1 = new javax.swing.JPasswordField();
         jLabel7 = new javax.swing.JLabel();
-        textoPassword2 = new javax.swing.JPasswordField();
         jLabel8 = new javax.swing.JLabel();
         textoPassword3 = new javax.swing.JPasswordField();
         btnSalir1 = new javax.swing.JButton();
         btnAceptar = new javax.swing.JButton();
-        textoRellenar1 = new javax.swing.JLabel();
+        textoRellenar = new javax.swing.JLabel();
         textoNoCoinciden = new javax.swing.JLabel();
         textoContraActual = new javax.swing.JLabel();
+        textoPassword2 = new javax.swing.JPasswordField();
 
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -70,10 +77,6 @@ public class VCambioContra extends javax.swing.JFrame {
                 btnSalirActionPerformed(evt);
             }
         });
-
-        textoRellenar.setFont(textoRellenar.getFont().deriveFont((float)12));
-        textoRellenar.setForeground(new java.awt.Color(255, 0, 0));
-        textoRellenar.setText("Rellena todos los campos.");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,9 +91,6 @@ public class VCambioContra extends javax.swing.JFrame {
 
         jLabel7.setFont(jLabel7.getFont().deriveFont(jLabel7.getFont().getSize()+2f));
         jLabel7.setText("Contraseña actual");
-
-        textoPassword2.setMinimumSize(new java.awt.Dimension(14, 27));
-        textoPassword2.setPreferredSize(new java.awt.Dimension(14, 27));
 
         jLabel8.setFont(jLabel8.getFont().deriveFont(jLabel8.getFont().getSize()+2f));
         jLabel8.setText("Contraseña nueva");
@@ -112,9 +112,9 @@ public class VCambioContra extends javax.swing.JFrame {
             }
         });
 
-        textoRellenar1.setFont(textoRellenar1.getFont().deriveFont((float)12));
-        textoRellenar1.setForeground(new java.awt.Color(255, 0, 0));
-        textoRellenar1.setText("Rellena todos los campos.");
+        textoRellenar.setFont(textoRellenar.getFont().deriveFont((float)12));
+        textoRellenar.setForeground(new java.awt.Color(255, 0, 0));
+        textoRellenar.setText("Rellena todos los campos.");
 
         textoNoCoinciden.setFont(textoNoCoinciden.getFont().deriveFont((float)12));
         textoNoCoinciden.setForeground(new java.awt.Color(255, 0, 0));
@@ -122,7 +122,10 @@ public class VCambioContra extends javax.swing.JFrame {
 
         textoContraActual.setFont(textoContraActual.getFont().deriveFont((float)12));
         textoContraActual.setForeground(new java.awt.Color(255, 0, 0));
-        textoContraActual.setText("La contraseña actual es incorrecta");
+        textoContraActual.setText("Contraseña actual incorrecta");
+
+        textoPassword2.setMinimumSize(new java.awt.Dimension(14, 27));
+        textoPassword2.setPreferredSize(new java.awt.Dimension(14, 27));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,34 +135,33 @@ public class VCambioContra extends javax.swing.JFrame {
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addComponent(textoPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
-                            .addComponent(textoPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textoContraActual))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(textoContraActual)
+                            .addComponent(textoPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textoPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(textoNoCoinciden)
-                                    .addComponent(textoPassword3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnSalir1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(btnAceptar)))
-                                .addGap(18, 18, 18))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(textoRellenar1)
-                                    .addComponent(jLabel6))
-                                .addGap(14, 14, 14))))))
+                            .addComponent(textoRellenar)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(textoNoCoinciden)
+                                        .addComponent(textoPassword3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(btnSalir1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(btnAceptar)))
+                                    .addGap(18, 18, 18))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel6)
+                                    .addGap(14, 14, 14)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,27 +172,30 @@ public class VCambioContra extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textoPassword2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(textoPassword1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(textoRellenar1)
+                            .addComponent(textoRellenar)
                             .addComponent(textoContraActual))
                         .addGap(17, 17, 17)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(textoPassword3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addComponent(textoNoCoinciden)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addComponent(jLabel8))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(textoNoCoinciden)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textoPassword1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnSalir1)
-                    .addComponent(btnAceptar))
-                .addGap(40, 40, 40))
+                    .addComponent(btnAceptar)
+                    .addComponent(textoPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(50, 50, 50))
         );
 
         pack();
@@ -211,14 +216,14 @@ public class VCambioContra extends javax.swing.JFrame {
             // TODO add your handling code here:
             // añadir un nuevo usuario
             // a la base de datos, y volvemos a la ventana de registro
-            if(!textoContraActual.getText().isEmpty() && !String.valueOf(textoPassword1.getPassword()).isEmpty() && !String.valueOf(textoPassword2.getPassword()).isEmpty()){
+            if(!String.valueOf(textoPassword1.getPassword()).isEmpty() && !String.valueOf(textoPassword2.getPassword()).isEmpty() && !String.valueOf(textoPassword3.getPassword()).isEmpty()){
 
-                if(coincidirPasswords(String.valueOf(textoPassword1.getPassword()), String.valueOf(textoPassword2.getPassword()))){
-                    this.h.modificarCliente(this.username, rsa.Encrypt(this.password), rsa.Encrypt(String.valueOf(textoPassword1.getPassword())));
+                if(coincidirPasswords(String.valueOf(textoPassword2.getPassword()), String.valueOf(textoPassword3.getPassword()))){
+                    this.h.modificarCliente(this.username, rsa.Encrypt(this.password), rsa.Encrypt(String.valueOf(textoPassword2.getPassword())));
 
                     this.dispose();
                 }
-                else if(!textoContraActual.getText().equals(this.password)){
+                else if(!String.valueOf(textoPassword1.getPassword()).equals(this.password)){
                     textoContraActual.setVisible(true);
                     textoNoCoinciden.setVisible(false);
                     textoRellenar.setVisible(false);
@@ -259,6 +264,5 @@ public class VCambioContra extends javax.swing.JFrame {
     private javax.swing.JPasswordField textoPassword2;
     private javax.swing.JPasswordField textoPassword3;
     private javax.swing.JLabel textoRellenar;
-    private javax.swing.JLabel textoRellenar1;
     // End of variables declaration//GEN-END:variables
 }
