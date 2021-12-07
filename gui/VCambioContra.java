@@ -43,6 +43,8 @@ public class VCambioContra extends javax.swing.JFrame {
         
         initComponents();
         
+        this.setTitle("Ventana cambio contraseña");
+        
         textoRellenar.setVisible(false);
         textoNoCoinciden.setVisible(false);
         textoContraActual.setVisible(false);
@@ -218,7 +220,7 @@ public class VCambioContra extends javax.swing.JFrame {
             // a la base de datos, y volvemos a la ventana de registro
             if(!String.valueOf(textoPassword1.getPassword()).isEmpty() && !String.valueOf(textoPassword2.getPassword()).isEmpty() && !String.valueOf(textoPassword3.getPassword()).isEmpty()){
 
-                if(coincidirPasswords(String.valueOf(textoPassword2.getPassword()), String.valueOf(textoPassword3.getPassword()))){
+                if(coincidirPasswords(String.valueOf(textoPassword2.getPassword()), String.valueOf(textoPassword3.getPassword())) && String.valueOf(textoPassword1.getPassword()).equals(this.password)){
                     this.h.modificarCliente(this.username, rsa.Encrypt(this.password), rsa.Encrypt(String.valueOf(textoPassword2.getPassword())));
 
                     this.dispose();

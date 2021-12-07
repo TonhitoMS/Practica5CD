@@ -456,11 +456,11 @@ public class VCliente extends javax.swing.JFrame {
                     nuevoAviso("No te puedes agregar a ti mismo como amigo.");
                 }
             }
-            else if(!this.h.existeCliente(nombreAmigo)){
+            else if(!this.h.existeCliente(nombreAmigo) && nombreAmigo != null){
                 System.out.println(this.h.existeCliente(nombreAmigo));
                 nuevoAviso("El usuario introducido no existe.");
             }
-            else{
+            else if(nombreAmigo != null){
                 nuevoAviso("Ya eres amigo de ese usuario.");
             }
         } catch (Exception ex) {

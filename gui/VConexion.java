@@ -30,6 +30,8 @@ public class VConexion extends javax.swing.JFrame {
         textoRellenar.setVisible(false);
         textoUsuarioConectado.setVisible(false);
         
+        this.setTitle("Ventana conexión");
+        
         try{
             String registryURL = "rmi://" +textoHost.getText()+ ":" + textoPuerto.getText() + "/callback";
 

@@ -50,6 +50,8 @@ public class VSolicitudes extends javax.swing.JFrame {
         
         initComponents();
         
+        this.setTitle("Ventana solicitudes");
+        
         try {
             actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, rsa.Encrypt(this.password)));
             

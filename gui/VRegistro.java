@@ -40,6 +40,8 @@ public class VRegistro extends javax.swing.JFrame {
 
         initComponents();
         
+        this.setTitle("Ventana registro");
+        
         textoNoCoinciden.setVisible(false);
         textoRellenar.setVisible(false);
         textoYaExiste.setVisible(false);

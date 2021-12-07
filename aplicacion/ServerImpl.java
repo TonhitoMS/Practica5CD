@@ -169,7 +169,7 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     public RSA obterClave() throws RemoteException {
         RSA rsa = new RSA();
         try {
-            rsa.openFromDiskPublicKey("/tmp/rsa.pub");
+            rsa.openFromDiskPublicKey("C:\\Users\\pablo\\AppData\\Local\\Temp\\rsa.pub");
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
             Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
