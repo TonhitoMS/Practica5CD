@@ -86,6 +86,14 @@ public class DAOServidor extends AbstractDAO {
         ResultSet rsAmigos;
         String result = null;
         
+        String claveBD = "";
+        try {
+            claveBD = rsa.Decrypt(clave);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                IllegalBlockSizeException | BadPaddingException ex) {
+            Logger.getLogger(DAOServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         con = super.getConexion();
         try {
             con.setAutoCommit(true);
@@ -94,7 +102,7 @@ public class DAOServidor extends AbstractDAO {
                     + "where id_cliente = ? "
                     + "and clave = ?");
             stmAmigos.setString(1, nome);
-            stmAmigos.setString(2, this.encript(clave));
+            stmAmigos.setString(2, this.encript(claveBD));
             rsAmigos = stmAmigos.executeQuery();
             if (rsAmigos.next()) {
                 result = rsAmigos.getString("id_cliente");
@@ -162,12 +170,20 @@ public class DAOServidor extends AbstractDAO {
         PreparedStatement stmCliente = null;
         ResultSet rsAmigos;
         
+        String claveBD = "";
+        try {
+            claveBD = rsa.Decrypt(clave);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                IllegalBlockSizeException | BadPaddingException ex) {
+            Logger.getLogger(DAOServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         con = super.getConexion();
         try {
             con.setAutoCommit(true);
             stmCliente = con.prepareStatement("insert into cliente values(?, ?)");
             stmCliente.setString(1, nome);
-            stmCliente.setString(2, this.encript(clave));
+            stmCliente.setString(2, this.encript(claveBD));
             
             stmCliente.executeUpdate();
 
