@@ -44,7 +44,7 @@ public class DAOServidor extends AbstractDAO {
         }
     }
     
-    public ArrayList<String> obterAmigos(String nome, String clave){
+    public ArrayList<String> obterAmigos(String nome){
         Connection con;
         PreparedStatement stmAmigos = null;
         ResultSet rsAmigos;

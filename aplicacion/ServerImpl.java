@@ -92,9 +92,9 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
                 }
             }
             // mandamos la lista de usuarios conectados al cliente
-            nextClient.getCl().notifyMe(obterAmigos(nextClient.getNombre(), "ola"));
+            nextClient.getCl().notifyMe(obterAmigos(nextClient.getNombre()));
             System.out.println(nextClient.getNombre());
-            System.out.println(this.obterAmigos(nextClient.getNombre(), "ola"));
+            System.out.println(this.obterAmigos(nextClient.getNombre()));
 //            
         }// end for
         System.out.println("********************************\n" +
@@ -102,8 +102,8 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     } // doCallbacks
 
     @Override
-    public ArrayList<Peer> obterAmigos(String nome, String clave) throws RemoteException {
-        ArrayList<String> amigos = fbd.obterAmigos(nome, clave);
+    public ArrayList<Peer> obterAmigos(String nome) throws RemoteException {
+        ArrayList<String> amigos = fbd.obterAmigos(nome);
         ArrayList<Peer> result = new ArrayList();
         
         
@@ -143,10 +143,7 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
         fbd.novoCliente(nome, clave);
     }
 
-//    @Override
-//    public void novoAmigo(String nome1, String nome2, String clave) throws RemoteException {
-//        fbd.novoAmigo(nome1, nome2, clave);
-//    }
+
 
     @Override
     public void novaSolicitude(String nome1, String nome2, String clave) throws RemoteException {
@@ -193,8 +190,8 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     }
 
     
-    @Override
-    public void actualizarSolicitudes() throws RemoteException {
+    
+    private void actualizarSolicitudes() throws RemoteException {
         for(Peer p: this.clientList){
             if(fbd.haiSolicitudes(p.getNombre())){
                 p.getCl().nuevaSolicitud();

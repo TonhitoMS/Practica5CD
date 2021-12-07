@@ -79,8 +79,8 @@ public class FachadaBaseDatos {
         }
     }
         
-    public ArrayList<String> obterAmigos(String nome, String clave){
-     return(daoServidor.obterAmigos(nome, clave));
+    public ArrayList<String> obterAmigos(String nome){
+     return(daoServidor.obterAmigos(nome));
         
     }
     

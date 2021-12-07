@@ -26,7 +26,7 @@ public interface IServidor extends Remote{
     public void unregisterForCallback(Peer p)
     throws java.rmi.RemoteException;
     
-    public ArrayList<Peer> obterAmigos(String nome, String clave)//modificar para devolver peer
+    public ArrayList<Peer> obterAmigos(String nome)
             throws java.rmi.RemoteException;
     
     public String iniciarSesion(String nome, String clave)
@@ -67,6 +67,5 @@ public interface IServidor extends Remote{
                 throws RemoteException;
     
     
-    public void actualizarSolicitudes() throws RemoteException;
 
 }
