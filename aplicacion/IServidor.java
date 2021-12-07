@@ -63,9 +63,10 @@ public interface IServidor extends Remote{
     public Boolean existeCliente(String nome)
             throws java.rmi.RemoteException;
     
-   public Boolean comprobarAmigos(String nome1, String nome2, String clave)
-            throws java.rmi.RemoteException;
-   
-//   public void actualizarSolicitudes()
-//           throws java.rmi.RemoteException;
+    public Boolean comprobarAmigos(String nome1, String nome2, String clave)
+                throws RemoteException;
+    
+    
+    public void actualizarSolicitudes() throws RemoteException;
+
 }

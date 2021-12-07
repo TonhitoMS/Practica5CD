@@ -57,18 +57,6 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
                 }
             }
             
-//            StyledDocument doc = c.getPanelMensajes().getStyledDocument();
-//
-//            SimpleAttributeSet set = new SimpleAttributeSet();
-//            StyleConstants.setAlignment(set, StyleConstants.ALIGN_LEFT);
-//            
-//            int length = doc.getLength();
-//            doc.insertString(doc.getLength(), s + "\n", null);
-//            doc.setParagraphAttributes(length+1, 1, set, false);
-//            
-//            // imprimimos la hora a la que recibimos el mensaje
-//            c.imprimirHora("izquierda", c.obtenerHora());
-            
         } catch(Exception e){
             System.out.println("Excepction: " +e);
         }

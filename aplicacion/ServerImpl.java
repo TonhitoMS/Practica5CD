@@ -183,8 +183,9 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     @Override
     public Boolean existeCliente(String nome) throws RemoteException {
         return fbd.existeCliente(nome);    
-    
     }
+    
+ 
 
     @Override
     public Boolean comprobarAmigos(String nome1, String nome2, String clave) throws RemoteException {
@@ -192,6 +193,7 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     }
 
     
+    @Override
     public void actualizarSolicitudes() throws RemoteException {
         for(Peer p: this.clientList){
             if(fbd.haiSolicitudes(p.getNombre())){
