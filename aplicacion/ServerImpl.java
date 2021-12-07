@@ -182,6 +182,6 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
     @Override
     public Boolean existeCliente(String nome) throws RemoteException {
         return fbd.existeCliente(nome);    
+    }
     
-    }
-    }
+}

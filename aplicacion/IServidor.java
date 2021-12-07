@@ -64,4 +64,5 @@ public interface IServidor extends Remote{
     
     public Boolean existeCliente(String nome)
             throws java.rmi.RemoteException;
+    
 }

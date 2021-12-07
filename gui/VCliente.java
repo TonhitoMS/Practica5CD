@@ -528,6 +528,16 @@ public class VCliente extends javax.swing.JFrame {
         
         return formate.toString();
     }
+    
+    // funcion para comprobar so hay colicitudes pendientes
+    public Boolean comprobarSolicitudes(){
+        try {
+            return !this.h.obterSolicitudes(this.username, rsa.Encrypt(this.password)).isEmpty();
+        } catch (Exception ex){
+            System.out.println("Excepcion: " +ex);
+        }
+        return false;
+    } 
 
     public ArrayList<Amigo> getAmigos() {
         return amigos;
@@ -553,6 +563,8 @@ public class VCliente extends javax.swing.JFrame {
     public JLabel getTxtNuevaSolicitud() {
         return txtNuevaSolicitud;
     }
+    
+    
     
     
     
