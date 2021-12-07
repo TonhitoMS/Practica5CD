@@ -6,6 +6,7 @@
 package gui;
 
 import aplicacion.IServidor;
+import aplicacion.RSA;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
@@ -20,12 +21,18 @@ import javax.swing.JFrame;
 public class VRegistro extends javax.swing.JFrame {
     
     private IServidor h;
+    private RSA rsa;
     /**
      * Creates new form VRegistro
      */
     public VRegistro(IServidor h) {
         
         this.h = h;
+        try {
+            this.rsa = this.h.obterClave();
+        } catch (Exception ex) {
+            Logger.getLogger(VRegistro.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         this.setVisible(true);
         
@@ -187,7 +194,7 @@ public class VRegistro extends javax.swing.JFrame {
             if(!textoNombre.getText().isEmpty() && !String.valueOf(textoPassword1.getPassword()).isEmpty() && !String.valueOf(textoPassword2.getPassword()).isEmpty()){
                 
                 if(coincidirPasswords(String.valueOf(textoPassword1.getPassword()), String.valueOf(textoPassword2.getPassword()))){
-                    this.h.novoCliente(textoNombre.getText(), String.valueOf(textoPassword1.getPassword()));
+                    this.h.novoCliente(textoNombre.getText(), rsa.Encrypt(String.valueOf(textoPassword1.getPassword())));
                 
                     this.dispose();
                 }
@@ -201,7 +208,7 @@ public class VRegistro extends javax.swing.JFrame {
                 textoNoCoinciden.setVisible(false);
             }
             
-        } catch (RemoteException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(VRegistro.class.getName()).log(Level.SEVERE, null, ex);
         }
         

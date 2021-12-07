@@ -23,5 +23,7 @@ public interface ICliente extends Remote{
     public Peer getPeer(String nome) throws java.rmi.RemoteException;
     
     public void nuevoMensaje(Peer user) throws java.rmi.RemoteException;
-
+    
+    public void nuevaSolicitud() throws java.rmi.RemoteException;
+    
 }
