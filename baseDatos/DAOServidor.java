@@ -188,16 +188,16 @@ public class DAOServidor extends AbstractDAO {
         PreparedStatement stmCliente = null;
         ResultSet rsAmigos;
         
-        String claveBD = "";
-        try {
-            claveBD = rsa.Decrypt(clave);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
-                IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(DAOServidor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-         if(!this.Autentificación(nome1, claveBD))
-            return;
+//        String claveBD = "";
+//        try {
+//            claveBD = rsa.Decrypt(clave);
+//        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+//                IllegalBlockSizeException | BadPaddingException ex) {
+//            Logger.getLogger(DAOServidor.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+//         if(!this.Autentificación(nome1, clave))
+//            return;
         
         con = super.getConexion();
         try {
@@ -392,7 +392,17 @@ public class DAOServidor extends AbstractDAO {
         PreparedStatement stmCliente = null;
         ResultSet rsAmigos;
         
-        if(!this.Autentificación(nome, clave))
+        String claveBD = "";
+        String claveNovaBD = "";
+        try {
+            claveBD = rsa.Decrypt(clave);
+            claveNovaBD = rsa.Decrypt(claveNova);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                IllegalBlockSizeException | BadPaddingException ex) {
+            Logger.getLogger(DAOServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+         if(!this.Autentificación(nome, claveBD))
             return;
         con = super.getConexion();
         
@@ -401,7 +411,7 @@ public class DAOServidor extends AbstractDAO {
             stmCliente = con.prepareStatement("update Cliente "
                     + "set clave = ? "
                     + "where id_cliente = ?");
-            stmCliente.setString(1, this.encript(claveNova));
+            stmCliente.setString(1, this.encript(claveNovaBD));
             stmCliente.setString(2, nome);
 
             stmCliente.executeUpdate();
