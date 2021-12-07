@@ -39,9 +39,7 @@ public interface IServidor extends Remote{
     public void novoCliente(String nome, String clave)
             throws java.rmi.RemoteException;
     
-    public void novoAmigo(String nome1, String nome2, String clave)
-            throws java.rmi.RemoteException;
-    
+       
     
     public void novaSolicitude(String nome1, String nome2, String clave)
             throws java.rmi.RemoteException;
@@ -64,4 +62,10 @@ public interface IServidor extends Remote{
     
     public Boolean existeCliente(String nome)
             throws java.rmi.RemoteException;
+    
+   public Boolean comprobarAmigos(String nome1, String nome2, String clave)
+            throws java.rmi.RemoteException;
+   
+//   public void actualizarSolicitudes()
+//           throws java.rmi.RemoteException;
 }

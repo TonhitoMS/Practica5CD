@@ -143,14 +143,15 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
         fbd.novoCliente(nome, clave);
     }
 
-    @Override
-    public void novoAmigo(String nome1, String nome2, String clave) throws RemoteException {
-        fbd.novoAmigo(nome1, nome2, clave);
-    }
+//    @Override
+//    public void novoAmigo(String nome1, String nome2, String clave) throws RemoteException {
+//        fbd.novoAmigo(nome1, nome2, clave);
+//    }
 
     @Override
     public void novaSolicitude(String nome1, String nome2, String clave) throws RemoteException {
         fbd.novaSolicitude(nome1, nome2, clave);
+        this.actualizarSolicitudes();
     }
 
     @Override
@@ -184,4 +185,20 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
         return fbd.existeCliente(nome);    
     
     }
+
+    @Override
+    public Boolean comprobarAmigos(String nome1, String nome2, String clave) throws RemoteException {
+        return fbd.comprobarAmigos(nome1, nome2, clave);
+    }
+
+    
+    public void actualizarSolicitudes() throws RemoteException {
+        for(Peer p: this.clientList){
+            if(fbd.haiSolicitudes(p.getNombre())){
+                p.getCl().nuevaSolicitud();
+            }
+        }
+    }
+    
+    
     }

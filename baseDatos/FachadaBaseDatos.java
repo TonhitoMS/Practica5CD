@@ -54,20 +54,21 @@ public class FachadaBaseDatos {
                     configuracion.getProperty("baseDatos"),
                     usuario);
             daoServidor = new DAOServidor(conexion);
-//            RSA rsa = new RSA();
-//            try {
-//                rsa.openFromDiskPublicKey("/tmp/rsa.pub");
-//            } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
-//                Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            String clave = null;
-//            try {
-//                clave = rsa.Encrypt("ola");
-//            } catch (Exception ex) {
-//                Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            daoServidor.novaSolicitude("antonio", "jose", clave);
-//            System.out.println(daoServidor.Autentificación("antonio", "ola"));
+            RSA rsa = new RSA();
+            try {
+                rsa.openFromDiskPublicKey("/tmp/rsa.pub");
+            } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
+                Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            String clave = null;
+            try {
+                clave = rsa.Encrypt("ola");
+            } catch (Exception ex) {
+                Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            System.out.println(daoServidor.comprobarAmigo("pablo", "antonio", clave));
+            System.out.println(this.haiSolicitudes("jose"));
 
 
         } catch (IOException | java.sql.SQLException e){
@@ -96,9 +97,9 @@ public class FachadaBaseDatos {
         daoServidor.novoCliente(nome, clave);
     }
     
-    public void novoAmigo(String nome1, String nome2, String clave){
-        daoServidor.novoAmigo(nome1, nome2, clave);
-    }
+//    public void novoAmigo(String nome1, String nome2, String clave){
+//        daoServidor.novoAmigo(nome1, nome2, clave);
+//    }
     
     
     public void novaSolicitude(String nome1, String nome2, String clave){
@@ -122,6 +123,13 @@ public class FachadaBaseDatos {
     public Boolean existeCliente(String nome){
         return daoServidor.existeCliente(nome);
     }
-
+    
+    public Boolean comprobarAmigos(String nome1, String nome2, String clave){
+        return daoServidor.comprobarAmigo(nome1, nome2, clave);
+    }
+            
+    public Boolean haiSolicitudes(String nome){
+        return daoServidor.haiSolicitudes(nome);
+    }
     
 }

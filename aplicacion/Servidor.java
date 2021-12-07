@@ -52,10 +52,10 @@ public class Servidor  {
         
         //Las guardamos asi podemos usarlas despues
         //a lo largo del tiempo
-        //rsa.saveToDiskPrivateKey("/tmp/rsa.pri");
-        //rsa.saveToDiskPublicKey("/tmp/rsa.pub");
-        rsa.saveToDiskPrivateKey("C:\\Users\\pablo\\AppData\\Local\\Temp\\rsa.pri");
-        rsa.saveToDiskPublicKey("C:\\Users\\pablo\\AppData\\Local\\Temp\\rsa.pub");
+        rsa.saveToDiskPrivateKey("/tmp/rsa.pri");
+        rsa.saveToDiskPublicKey("/tmp/rsa.pub");
+//        rsa.saveToDiskPrivateKey("C:\\Users\\pablo\\AppData\\Local\\Temp\\rsa.pri");
+//        rsa.saveToDiskPublicKey("C:\\Users\\pablo\\AppData\\Local\\Temp\\rsa.pub");
                 
         try{     
             System.out.println("Enter the RMIregistry port number:");

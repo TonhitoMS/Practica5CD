@@ -34,7 +34,7 @@ public class DAOServidor extends AbstractDAO {
         super.setConexion(conexion);
         rsa = new RSA();
         try {
-            rsa.openFromDiskPrivateKey("C:\\Users\\pablo\\AppData\\Local\\Temp\\rsa.pri");
+            rsa.openFromDiskPrivateKey("/tmp/rsa.pri");
         } catch (IOException ex) {
             Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
@@ -199,10 +199,9 @@ public class DAOServidor extends AbstractDAO {
         }
     }
     
-    public void novoAmigo(String nome1, String nome2, String clave){
+    private void novoAmigo(String nome1, String nome2){
         Connection con;
         PreparedStatement stmCliente = null;
-        ResultSet rsAmigos;
         
 //        String claveBD = "";
 //        try {
@@ -309,7 +308,7 @@ public class DAOServidor extends AbstractDAO {
             System.out.println(stmCliente);
 
             stmCliente.executeUpdate();
-            this.novoAmigo(nome1, nome2, clave);
+            this.novoAmigo(nome1, nome2);
             
             con.commit();
 
@@ -525,8 +524,85 @@ public class DAOServidor extends AbstractDAO {
     public Boolean comprobarAmigo(String nome1, String nome2, String clave){
         Boolean result = false;
         
+        Connection con;
+        PreparedStatement stmAmigos = null;
+        ResultSet rsAmigos;
+        ArrayList<String> Amigos = new ArrayList();
         
+        String claveBD = "";
+        try {
+            claveBD = rsa.Decrypt(clave);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                IllegalBlockSizeException | BadPaddingException ex) {
+            Logger.getLogger(DAOServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
+         if(!this.Autentificación(nome1, claveBD))
+            return false;
+        
+        con = super.getConexion();
+        try {
+            con.setAutoCommit(true);
+            stmAmigos = con.prepareStatement("select id_cliente2 "
+                    + "from SerAmigo "
+                    + "where id_cliente1 = ? "
+                    + "and id_cliente2 = ? "
+                    + "union "
+                    + "select id_cliente1 "
+                    + "from SerAmigo "
+                    + "where id_cliente2 = ? "
+                    + "and id_cliente1 = ?");
+            stmAmigos.setString(1, nome1);
+            stmAmigos.setString(2, nome2);            
+            stmAmigos.setString(3, nome1);            
+            stmAmigos.setString(4, nome2);  
+            rsAmigos = stmAmigos.executeQuery();
+            if (rsAmigos.next()) {
+                result = true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+//            this.getFachadaAplicacion().muestraExcepcion(e.getMessage());
+        } finally {
+            try {
+                stmAmigos.close();
+            } catch (SQLException e) {
+                System.out.println("Imposible cerrar cursores");
+            }
+        }
+        
+        return result;
+    }
+    
+    public Boolean haiSolicitudes(String nome){
+       Boolean result = false;
+       Connection con;
+        PreparedStatement stmAmigos = null;
+        ResultSet rsAmigos;
+       
+       con = super.getConexion();
+        try {
+            con.setAutoCommit(true);
+            stmAmigos = con.prepareStatement("select id_cliente1, id_cliente2, fecha "
+                    + "from Solicitude "
+                    + "where id_cliente2 = ? ");
+            stmAmigos.setString(1, nome);
+            rsAmigos = stmAmigos.executeQuery();
+            if (rsAmigos.next()) {
+                result = true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+//            this.getFachadaAplicacion().muestraExcepcion(e.getMessage());
+        } finally {
+            try {
+                stmAmigos.close();
+            } catch (SQLException e) {
+                System.out.println("Imposible cerrar cursores");
+            }
+        }
         return result;
     }
 }
