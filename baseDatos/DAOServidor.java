@@ -522,7 +522,13 @@ public class DAOServidor extends AbstractDAO {
         return result;
     }
 
-
+    public Boolean comprobarAmigo(String nome1, String nome2, String clave){
+        Boolean result = false;
+        
+        
+        
+        return result;
+    }
 }
 
 
