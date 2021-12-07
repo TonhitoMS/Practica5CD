@@ -47,7 +47,7 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
             System.out.println("Registered new client ");
             
             doCallbacks();
-        } // end if
+        } 
     }  
 
     @Override
@@ -86,16 +86,9 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
             // creamos la lista para enviar al cliente, quitandole a el mismo de la lista
             ArrayList<Peer> newClientList = new ArrayList<>();
             
-//            for (Peer p : clientList){
-//                if(!p.equals(nextClient)){
-//                    newClientList.add(p);
-//                }
-//            }
             // mandamos la lista de usuarios conectados al cliente
             nextClient.getCl().notifyMe(obterAmigos(nextClient.getNombre()));
-            //System.out.println(nextClient.getNombre());
-            //System.out.println(this.obterAmigos(nextClient.getNombre()));
-//            
+            
         }// end for
         System.out.println("********************************\n" +
                            "Server completed callbacks ---");

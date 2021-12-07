@@ -216,8 +216,6 @@ public class VCambioContra extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         try {
             // TODO add your handling code here:
-            // añadir un nuevo usuario
-            // a la base de datos, y volvemos a la ventana de registro
             if(!String.valueOf(textoPassword1.getPassword()).isEmpty() && !String.valueOf(textoPassword2.getPassword()).isEmpty() && !String.valueOf(textoPassword3.getPassword()).isEmpty()){
 
                 if(coincidirPasswords(String.valueOf(textoPassword2.getPassword()), String.valueOf(textoPassword3.getPassword())) && String.valueOf(textoPassword1.getPassword()).equals(this.password)){

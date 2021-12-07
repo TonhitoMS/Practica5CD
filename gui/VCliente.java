@@ -201,7 +201,6 @@ public class VCliente extends javax.swing.JFrame {
             this.peer = new Peer(username, IC);
             
             System.out.println(h.sayHello());
-    //          System.out.println(peer.getCl());
     
             this.h.registerForCallback(peer);
             
@@ -466,7 +465,7 @@ public class VCliente extends javax.swing.JFrame {
         
         try{
             if(nombreAmigo != null && !this.h.comprobarAmigos(this.username, nombreAmigo, rsa.Encrypt(this.password)) && this.h.existeCliente(nombreAmigo) && !this.h.existeSolicitude(this.username, nombreAmigo) && !this.h.existeSolicitude(nombreAmigo, this.username)){
-                //this.h.novoAmigo(this.username, nombreAmigo, this.password);
+                
                 if(!nombreAmigo.equals(this.username)){
                     this.h.novaSolicitude(this.username, nombreAmigo, rsa.Encrypt(this.password));
                 }

@@ -57,8 +57,6 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
                 }
             }
             
-            //System.out.println(c.getAmigos());
-            
         } catch(Exception e){
             System.out.println("Excepction: " +e);
         }
@@ -91,11 +89,7 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
     public synchronized void notifyMe(ArrayList<Peer> usuarios){
         
         this.usuarios = usuarios;
-        //System.out.println(usuarios);
-        //c.setUsuarios(usuarios);  // Pasamos la lista al cliente
-        
-        // Actualizamos la tabla de los usuarios
-        
+
         ArrayList<Amigo> amigos = c.setListaUsuarios(usuarios);
         
         actualizarTablaUsuarios(amigos);
