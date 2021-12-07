@@ -171,6 +171,15 @@ public class VCliente extends javax.swing.JFrame {
             }
         });
         
+        // comprobamos se temos solicitudes pendentes
+        try{
+            if(!this.h.obterSolicitudes(this.username, rsa.Encrypt(this.password)).isEmpty()){
+                txtNuevaSolicitud.setVisible(true);
+            }
+        } catch(Exception ex){
+            System.out.println("Excepcion: " +ex);
+        }
+        
         // Iniciamos el cliente
         startClient();
     }
