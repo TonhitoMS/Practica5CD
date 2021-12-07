@@ -89,6 +89,7 @@ public class DAOServidor extends AbstractDAO {
         String claveBD = "";
         try {
             claveBD = rsa.Decrypt(clave);
+            System.out.println(claveBD);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
                 IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(DAOServidor.class.getName()).log(Level.SEVERE, null, ex);
