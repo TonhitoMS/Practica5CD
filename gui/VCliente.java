@@ -11,6 +11,7 @@ import aplicacion.ICliente;
 import aplicacion.IServidor;
 import aplicacion.PaqueteChat;
 import aplicacion.Peer;
+import aplicacion.RSA;
 import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
@@ -31,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -54,6 +56,7 @@ public class VCliente extends javax.swing.JFrame {
     
     private IServidor h;
     private ICliente IC;
+    private RSA rsa;
     
     private String username;
     private String password;
@@ -67,6 +70,8 @@ public class VCliente extends javax.swing.JFrame {
     private Peer peerActual;
     private Amigo amigoActual;
     
+    private boolean nuevaSolicitud;
+    
     /**
      * Creates new form VCliente
      * @param password
@@ -78,6 +83,11 @@ public class VCliente extends javax.swing.JFrame {
         this.username = username;
         this.password = password;
         this.h = h;
+        try {
+            this.rsa = this.h.obterClave();
+        } catch (Exception ex) {
+            Logger.getLogger(VCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         this.amigos = new ArrayList<>();
         this.amigosEnLinea = new ArrayList<>();
@@ -86,6 +96,8 @@ public class VCliente extends javax.swing.JFrame {
         this.setVisible(true);
         
         initComponents();
+        
+        txtNuevaSolicitud.setVisible(false);
         
         TablaUsuarios.getSelectionModel().clearSelection();
         
@@ -158,7 +170,7 @@ public class VCliente extends javax.swing.JFrame {
                 }
             }
         });
-
+        
         // Iniciamos el cliente
         startClient();
     }
@@ -270,6 +282,7 @@ public class VCliente extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         panelMensajes = new javax.swing.JTextPane();
         btnEnviar = new javax.swing.JButton();
+        txtNuevaSolicitud = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         btnCambiarContrasena = new javax.swing.JMenuItem();
@@ -308,9 +321,18 @@ public class VCliente extends javax.swing.JFrame {
             }
         });
 
+        txtNuevaSolicitud.setFont(txtNuevaSolicitud.getFont().deriveFont((float)12));
+        txtNuevaSolicitud.setForeground(new java.awt.Color(0, 150, 255));
+        txtNuevaSolicitud.setText("Tienes nuevas solicitudes de amistad");
+
         jMenu1.setText("Usuario");
 
         btnCambiarContrasena.setText("Cambiar contraseña");
+        btnCambiarContrasena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCambiarContrasenaActionPerformed(evt);
+            }
+        });
         jMenu1.add(btnCambiarContrasena);
 
         btnCerrarSesion.setText("Cerrar sesión");
@@ -352,7 +374,10 @@ public class VCliente extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textoHola, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(textoHola, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(28, 28, 28)
+                        .addComponent(txtNuevaSolicitud))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -370,7 +395,9 @@ public class VCliente extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(textoHola, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textoHola, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNuevaSolicitud))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -416,9 +443,9 @@ public class VCliente extends javax.swing.JFrame {
         if(nombreAmigo != null){
             try {
                 //this.h.novoAmigo(this.username, nombreAmigo, this.password);
-                this.h.novaSolicitude(this.username, nombreAmigo, this.password);
+                this.h.novaSolicitude(this.username, nombreAmigo, rsa.Encrypt(this.password));
                 
-            } catch (RemoteException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(VCliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -434,6 +461,11 @@ public class VCliente extends javax.swing.JFrame {
         Rectangle rect = new Rectangle(0,height,10,10);
         this.panelMensajes.scrollRectToVisible(rect);
     }//GEN-LAST:event_panelMensajesInputMethodTextChanged
+
+    private void btnCambiarContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarContrasenaActionPerformed
+        // TODO add your handling code here:
+        VCambioContra cambioContra = new VCambioContra(this.username, this.password, this.h, this);
+    }//GEN-LAST:event_btnCambiarContrasenaActionPerformed
     
     public void imprimirMensaje(String align, String mensaje){
         
@@ -517,6 +549,11 @@ public class VCliente extends javax.swing.JFrame {
     public ArrayList<String> getAmigosNuevoMensaje() {
         return amigosNuevoMensaje;
     }
+
+    public JLabel getTxtNuevaSolicitud() {
+        return txtNuevaSolicitud;
+    }
+    
     
     
     
@@ -536,5 +573,6 @@ public class VCliente extends javax.swing.JFrame {
     private javax.swing.JTextPane panelMensajes;
     private javax.swing.JTextField textoEnviar;
     private javax.swing.JLabel textoHola;
+    private javax.swing.JLabel txtNuevaSolicitud;
     // End of variables declaration//GEN-END:variables
 }

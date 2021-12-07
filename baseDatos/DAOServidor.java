@@ -34,7 +34,7 @@ public class DAOServidor extends AbstractDAO {
         super.setConexion(conexion);
         rsa = new RSA();
         try {
-            rsa.openFromDiskPrivateKey("/tmp/rsa.pri");
+            rsa.openFromDiskPrivateKey("C:\\Users\\pablo\\AppData\\Local\\Temp\\rsa.pri");
         } catch (IOException ex) {
             Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {

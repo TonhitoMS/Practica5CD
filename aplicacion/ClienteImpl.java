@@ -90,7 +90,11 @@ public class ClienteImpl extends UnicastRemoteObject implements ICliente {
         c.getTablaUsuarios().setDefaultRenderer(c.getTablaUsuarios().getColumnClass(0), new CustomTableRenderer(c.getAmigos()));
 
         c.getTablaUsuarios().repaint();
-   
+    }
+    
+    @Override
+    public void nuevaSolicitud(){
+        this.c.getTxtNuevaSolicitud().setVisible(true);
     }
     
     @Override

@@ -7,6 +7,7 @@ package gui;
 
 import aplicacion.IServidor;
 import aplicacion.Peer;
+import aplicacion.RSA;
 import aplicacion.Solicitud;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -27,6 +28,7 @@ public class VSolicitudes extends javax.swing.JFrame {
     private String password;
     private IServidor h;
     private VCliente c;
+    private RSA rsa;
     /**
      * Creates new form VSolicitudes
      */
@@ -36,6 +38,11 @@ public class VSolicitudes extends javax.swing.JFrame {
         this.password = password;
         this.h = h;
         this.c = c;
+        try {
+            this.rsa = this.h.obterClave();
+        } catch (Exception ex) {
+            Logger.getLogger(VSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         this.setVisible(true);
         
@@ -44,9 +51,9 @@ public class VSolicitudes extends javax.swing.JFrame {
         initComponents();
         
         try {
-            actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, this.password));
+            actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, rsa.Encrypt(this.password)));
             
-        } catch (RemoteException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(VSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -56,6 +63,8 @@ public class VSolicitudes extends javax.swing.JFrame {
                 setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
         });
+        
+        this.c.getTxtNuevaSolicitud().setVisible(false);
     }
     
     
@@ -168,13 +177,13 @@ public class VSolicitudes extends javax.swing.JFrame {
             try {
                 System.out.println((String)tablaSolicitudes.getValueAt(row, 0));
                 System.out.println((String)tablaSolicitudes.getValueAt(row, 1));
-                this.h.aceptaSolicitude(this.username, (String)tablaSolicitudes.getValueAt(row, 0), this.password);
+                this.h.aceptaSolicitude(this.username, (String)tablaSolicitudes.getValueAt(row, 0), rsa.Encrypt(this.password));
                 
-                actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, this.password));
+                actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, rsa.Encrypt(this.password)));
                 
                 this.h.actualizarListaAmigos();
                 
-            } catch (RemoteException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(VSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
             }
             
@@ -191,11 +200,11 @@ public class VSolicitudes extends javax.swing.JFrame {
             int row = tablaSolicitudes.getSelectedRow();
             
             try {
-                this.h.borrarSolicitude(this.username, (String)tablaSolicitudes.getValueAt(row, 0), this.password);
+                this.h.borrarSolicitude(this.username, (String)tablaSolicitudes.getValueAt(row, 0), rsa.Encrypt(this.password));
                 
-                actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, this.password));
+                actualizarTablaSolicitudes(this.h.obterSolicitudes(this.username, rsa.Encrypt(this.password)));
                 
-            } catch (RemoteException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(VSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
             }
             

@@ -6,7 +6,11 @@
 package gui;
 
 import aplicacion.IServidor;
+import aplicacion.RSA;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,6 +20,7 @@ import javax.swing.JOptionPane;
 public class VConexion extends javax.swing.JFrame {
     
     private IServidor h;
+    private RSA rsa;
     /**
      * Creates new form VConexion
      */
@@ -36,6 +41,12 @@ public class VConexion extends javax.swing.JFrame {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Hubo un problema al conectarse al servidor.");
             System.exit(0);
+        }
+        
+        try {
+            this.rsa = this.h.obterClave();
+        } catch (Exception ex) {
+            Logger.getLogger(VConexion.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         setLocationRelativeTo(null); // Localizar o JFRame no centro da pantalla
@@ -207,7 +218,7 @@ public class VConexion extends javax.swing.JFrame {
             try{                
                 if(!textoNombre.getText().isEmpty() && !String.valueOf(textoPassword.getPassword()).isEmpty()){
                     
-                    String aceptar = this.h.iniciarSesion(textoNombre.getText(), String.valueOf(textoPassword.getPassword()));
+                    String aceptar = this.h.iniciarSesion(textoNombre.getText(), rsa.Encrypt(String.valueOf(textoPassword.getPassword())));
                     
                     if(aceptar != null && aceptar.equals(textoNombre.getText())){
                     
