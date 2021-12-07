@@ -321,9 +321,9 @@ public class VCliente extends javax.swing.JFrame {
             }
         });
 
-        txtNuevaSolicitud.setFont(txtNuevaSolicitud.getFont().deriveFont((float)12));
+        txtNuevaSolicitud.setFont(txtNuevaSolicitud.getFont().deriveFont((float)13));
         txtNuevaSolicitud.setForeground(new java.awt.Color(0, 150, 255));
-        txtNuevaSolicitud.setText("Tienes nuevas solicitudes de amistad");
+        txtNuevaSolicitud.setText("Tienes nuevas solicitudes de amistad!");
 
         jMenu1.setText("Usuario");
 
@@ -395,7 +395,7 @@ public class VCliente extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoHola, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNuevaSolicitud))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -437,17 +437,25 @@ public class VCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
         String nombreAmigo = JOptionPane.showInputDialog(null, "Introduzca el nombre del usuario: ");
         
-        // necesitamos una funcion
-        // para comprobar si el amigo que queremos
-        // añadir existe
-        if(nombreAmigo != null){
-            try {
+        try{
+            if(nombreAmigo != null && !this.h.comprobarAmigos(this.username, nombreAmigo, rsa.Encrypt(this.password)) && this.h.existeCliente(nombreAmigo)){
                 //this.h.novoAmigo(this.username, nombreAmigo, this.password);
-                this.h.novaSolicitude(this.username, nombreAmigo, rsa.Encrypt(this.password));
-                
-            } catch (Exception ex) {
-                Logger.getLogger(VCliente.class.getName()).log(Level.SEVERE, null, ex);
+                if(!nombreAmigo.equals(this.username)){
+                    this.h.novaSolicitude(this.username, nombreAmigo, rsa.Encrypt(this.password));
+                }
+                else{
+                    nuevoAviso("No te puedes agregar a ti mismo como amigo.");
+                }
             }
+            else if(!this.h.existeCliente(nombreAmigo)){
+                System.out.println(this.h.existeCliente(nombreAmigo));
+                nuevoAviso("El usuario introducido no existe.");
+            }
+            else{
+                nuevoAviso("Ya eres amigo de ese usuario.");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(VCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -538,6 +546,11 @@ public class VCliente extends javax.swing.JFrame {
         }
         return false;
     } 
+    
+    // Funcion para que aparezca por pantalla un aviso si introducimos algo incorrectamente
+    public void nuevoAviso(String message){
+        JOptionPane.showMessageDialog(null, message, "Aviso", JOptionPane.WARNING_MESSAGE);
+    }
 
     public ArrayList<Amigo> getAmigos() {
         return amigos;

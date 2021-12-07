@@ -108,9 +108,9 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="textoHola" min="-2" pref="65" max="-2" attributes="0"/>
-                  <Component id="txtNuevaSolicitud" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="textoHola" alignment="3" min="-2" pref="65" max="-2" attributes="0"/>
+                  <Component id="txtNuevaSolicitud" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -190,13 +190,13 @@
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
           <FontInfo relative="true">
-            <Font component="txtNuevaSolicitud" property="font" relativeSize="false" size="12"/>
+            <Font component="txtNuevaSolicitud" property="font" relativeSize="false" size="13"/>
           </FontInfo>
         </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="96" red="0" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Tienes nuevas solicitudes de amistad"/>
+        <Property name="text" type="java.lang.String" value="Tienes nuevas solicitudes de amistad!"/>
       </Properties>
     </Component>
   </SubComponents>

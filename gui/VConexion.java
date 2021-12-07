@@ -74,8 +74,8 @@ public class VConexion extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         textoPassword = new javax.swing.JPasswordField();
         btnRegistrar = new javax.swing.JButton();
-        textoRellenar = new javax.swing.JLabel();
         textoUsuarioConectado = new javax.swing.JLabel();
+        textoRellenar = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -132,13 +132,13 @@ public class VConexion extends javax.swing.JFrame {
             }
         });
 
-        textoRellenar.setFont(textoRellenar.getFont().deriveFont((float)12));
-        textoRellenar.setForeground(new java.awt.Color(255, 0, 0));
-        textoRellenar.setText("Rellena todos los campos.");
-
         textoUsuarioConectado.setFont(textoUsuarioConectado.getFont().deriveFont((float)12));
         textoUsuarioConectado.setForeground(new java.awt.Color(255, 0, 0));
-        textoUsuarioConectado.setText("El usuario no está registrado");
+        textoUsuarioConectado.setText("Datos incorrectos");
+
+        textoRellenar.setFont(textoRellenar.getFont().deriveFont((float)12));
+        textoRellenar.setForeground(new java.awt.Color(255, 0, 0));
+        textoRellenar.setText("Rellena todos los campos");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -154,7 +154,7 @@ public class VConexion extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnAceptar))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
@@ -166,18 +166,21 @@ public class VConexion extends javax.swing.JFrame {
                             .addComponent(textoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
                             .addComponent(jLabel4)
-                            .addComponent(textoRellenar)
-                            .addComponent(textoUsuarioConectado))))
+                            .addComponent(textoUsuarioConectado)
+                            .addComponent(textoRellenar))))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(textoRellenar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(textoRellenar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(textoUsuarioConectado)))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel4))
@@ -193,14 +196,12 @@ public class VConexion extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textoPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(textoUsuarioConectado)
-                .addGap(18, 18, 18)
+                .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegistrar)
                     .addComponent(btnAceptar)
                     .addComponent(btnSalir))
-                .addGap(20, 20, 20))
+                .addGap(24, 24, 24))
         );
 
         pack();

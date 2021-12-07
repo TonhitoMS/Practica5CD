@@ -34,7 +34,7 @@ public class DAOServidor extends AbstractDAO {
         super.setConexion(conexion);
         rsa = new RSA();
         try {
-            rsa.openFromDiskPrivateKey("/tmp/rsa.pri");
+            rsa.openFromDiskPrivateKey("C:\\Users\\pablo\\AppData\\Local\\Temp\\rsa.pri");
         } catch (IOException ex) {
             Logger.getLogger(ServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
@@ -499,7 +499,8 @@ public class DAOServidor extends AbstractDAO {
         try {
             con.setAutoCommit(true);
             stmAmigos = con.prepareStatement("select id_cliente "
-                    + "from Cliente ");
+                    + "from Cliente "
+                    + "where id_cliente = ?");    // te faltaba esta linea
             stmAmigos.setString(1, nome);
             rsAmigos = stmAmigos.executeQuery();
             if (rsAmigos.next()) {
