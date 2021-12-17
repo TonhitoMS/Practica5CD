@@ -4,9 +4,12 @@
  * and open the template in the editor.
  */
 
-package aplicacion;
+package Servidor;
 
-import baseDatos.FachadaBaseDatos;
+import Servidor.FachadaBaseDatos;
+import Cliente.Peer;
+import Cliente.RSA;
+import Cliente.Solicitud;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -94,8 +97,8 @@ public class ServerImpl extends UnicastRemoteObject implements IServidor{
                            "Server completed callbacks ---");
     } // doCallbacks
 
-    @Override
-    public ArrayList<Peer> obterAmigos(String nome) throws RemoteException {
+    
+    private ArrayList<Peer> obterAmigos(String nome) throws RemoteException {
         ArrayList<String> amigos = fbd.obterAmigos(nome);
         ArrayList<Peer> result = new ArrayList();
         

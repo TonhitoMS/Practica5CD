@@ -5,8 +5,8 @@
  */
 package gui;
 
-import aplicacion.IServidor;
-import aplicacion.RSA;
+import Servidor.IServidor;
+import Cliente.RSA;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;

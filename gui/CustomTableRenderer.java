@@ -6,7 +6,7 @@
 
 package gui;
 
-import aplicacion.Amigo;
+import Cliente.Amigo;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;

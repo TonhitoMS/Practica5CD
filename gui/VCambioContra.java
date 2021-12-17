@@ -5,8 +5,8 @@
  */
 package gui;
 
-import aplicacion.IServidor;
-import aplicacion.RSA;
+import Servidor.IServidor;
+import Cliente.RSA;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

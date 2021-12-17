@@ -5,10 +5,10 @@
  */
 package gui;
 
-import aplicacion.IServidor;
-import aplicacion.Peer;
-import aplicacion.RSA;
-import aplicacion.Solicitud;
+import Servidor.IServidor;
+import Cliente.Peer;
+import Cliente.RSA;
+import Cliente.Solicitud;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;

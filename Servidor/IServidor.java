@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 
-package aplicacion;
+package Servidor;
+import Cliente.Peer;
+import Cliente.RSA;
+import Cliente.Solicitud;
 import java.rmi.*;
 
 import java.util.ArrayList;
@@ -25,10 +28,10 @@ public interface IServidor extends Remote{
 
     public void unregisterForCallback(Peer p)
     throws java.rmi.RemoteException;
-    
+    /*
     public ArrayList<Peer> obterAmigos(String nome)
             throws java.rmi.RemoteException;
-    
+    */
     public String iniciarSesion(String nome, String clave)
             throws java.rmi.RemoteException;
     

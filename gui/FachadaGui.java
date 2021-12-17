@@ -6,7 +6,7 @@
 
 package gui;
 
-import aplicacion.FachadaAplicacion;
+import Cliente.FachadaAplicacion;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 

@@ -6,8 +6,8 @@
 
 package gui;
 
-import aplicacion.Amigo;
-import aplicacion.Peer;
+import Cliente.Amigo;
+import Cliente.Peer;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;

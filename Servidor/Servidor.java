@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 
-package aplicacion;
+package Servidor;
 
-import baseDatos.FachadaBaseDatos;
+import Servidor.FachadaBaseDatos;
+import Cliente.FachadaAplicacion;
+import Cliente.RSA;
 import java.rmi.*;
 import java.rmi.server.*;
 import java.rmi.registry.Registry;

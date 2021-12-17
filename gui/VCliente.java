@@ -5,13 +5,13 @@
  */
 package gui;
 
-import aplicacion.Amigo;
-import aplicacion.ClienteImpl;
-import aplicacion.ICliente;
-import aplicacion.IServidor;
-import aplicacion.PaqueteChat;
-import aplicacion.Peer;
-import aplicacion.RSA;
+import Cliente.Amigo;
+import Cliente.ClienteImpl;
+import Cliente.ICliente;
+import Servidor.IServidor;
+import Cliente.PaqueteChat;
+import Cliente.Peer;
+import Cliente.RSA;
 import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
@@ -52,7 +52,7 @@ import javax.swing.text.StyledDocument;
  */
 public class VCliente extends javax.swing.JFrame {
     
-    aplicacion.FachadaAplicacion fa;
+    Cliente.FachadaAplicacion fa;
     
     private IServidor h;
     private ICliente IC;

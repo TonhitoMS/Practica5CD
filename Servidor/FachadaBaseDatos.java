@@ -4,11 +4,10 @@
  * and open the template in the editor.
  */
 
-package baseDatos;
+package Servidor;
 
-import aplicacion.RSA;
-import aplicacion.ServerImpl;
-import aplicacion.Solicitud;
+import Cliente.RSA;
+import Cliente.Solicitud;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package aplicacion;
+package Cliente;
 
 import java.util.ArrayList;
 import java.util.Objects;

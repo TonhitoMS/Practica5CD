@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-package aplicacion;
+package Cliente;
 
-import baseDatos.FachadaBaseDatos;
+import Servidor.FachadaBaseDatos;
 import gui.FachadaGui;
 
 /**

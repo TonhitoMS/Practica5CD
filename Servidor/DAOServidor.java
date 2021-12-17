@@ -2,11 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package baseDatos;
+package Servidor;
 
-import aplicacion.RSA;
-import aplicacion.ServerImpl;
-import aplicacion.Solicitud;
+import Cliente.RSA;
+import Cliente.Solicitud;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

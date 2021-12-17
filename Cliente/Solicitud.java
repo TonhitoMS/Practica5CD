@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package aplicacion;
+package Cliente;
 
 import java.io.Serializable;
 import java.sql.Date;

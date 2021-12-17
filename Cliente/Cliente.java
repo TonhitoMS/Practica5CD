@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package aplicacion;
+package Cliente;
 
+import Servidor.IServidor;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.rmi.*;
